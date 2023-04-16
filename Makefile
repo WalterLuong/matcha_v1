@@ -19,10 +19,10 @@ clean-docker:
 	docker system prune -a
 
 log-back:
-	docker logs back -f
+	docker logs matcha_backend -f
 
 log-db:
-	docker logs db -f
+	docker logs matcha_database -f
 
 log-front:
 	docker logs front -f
