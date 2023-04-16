@@ -2,7 +2,7 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 from flask import Flask, request
-import time
+from auth import auth
 
 # CREATE_ROOMS_TABLE = (
 #     "CREATE TABLE IF NOT EXISTS rooms (id SERIAL PRIMARY KEY, name TEXT);"
@@ -40,9 +40,15 @@ app = Flask(__name__)
 #             room_id = cursor.fetchone()[0]
 #     return {"id": room_id, "message":f'Room {name} created'}, 201
 
-# @app.get("/")
-# def main_page():
-#     return "Hello World"
+@app.get("/")
+def main_page():
+    return "Hello World"
 
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0')
+@app.get("/hello")
+def say_hello():
+    return {"message": "Hello World"}
+
+app.register_blueprint(auth)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)

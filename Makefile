@@ -1,6 +1,9 @@
 all:
 	docker-compose up --build -d
- 
+
+no-detach:
+	docker-compose up --build
+
 build: 
 	docker-compose build --no-cache
 

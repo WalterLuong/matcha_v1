@@ -1,13 +1,20 @@
 FROM python:3.7
 
-RUN mkdir /usr/src/app/
+LABEL maintainer "Walter Luong <wluong@student.42.fr>"
 
-COPY . /usr/src/app/
+RUN apt-get update
 
-WORKDIR /usr/src/app/
+RUN mkdir /usr/src/api/
+
+WORKDIR /usr/src/api/
+
+COPY src/ .
+COPY requirements.txt .
 
 EXPOSE 5000
 
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python", "app.py"]
+ENV FLASK_ENV="docker"
+
+CMD ["python", "./app.py"]
