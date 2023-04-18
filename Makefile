@@ -1,7 +1,7 @@
 all:
 	docker-compose up --build -d
 
-no-detach:
+logs:
 	docker-compose up --build
 
 build: 
@@ -31,10 +31,10 @@ log-front:
 	docker logs front -f
 
 enter-back:
-	docker exec -it back sh
+	docker exec -it matcha_backend sh
 
 enter-db:
-	docker exec -it db sh
+	docker exec -it matcha_database sh
 
 enter-front:
 	docker exec -it front sh
