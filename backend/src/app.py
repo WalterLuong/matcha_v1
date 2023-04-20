@@ -66,6 +66,7 @@ def get_user_by_id(id):
                 user = dict(zip(user_att, existant))
                 return user
             return {}
+
         
 @app.get("/users/all")
 def get_all_users():

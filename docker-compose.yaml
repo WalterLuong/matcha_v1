@@ -49,11 +49,28 @@ services:
       FLASK_APP: app
     networks:
       - postgres
+      - api_network
     restart: unless-stopped
+
+  matcha_client:
+    container_name: matcha_frontend
+    build: ./frontend/
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - api_network
+    volumes:
+      - ./frontend/app:/home/node/app
+      - ./frontend/app/node_modules:/home/node/app/node_modules
+
+
 
 
 networks:
   postgres:
+    driver: bridge
+  api_network:
     driver: bridge
 
 volumes:

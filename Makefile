@@ -28,7 +28,7 @@ log-db:
 	docker logs matcha_database -f
 
 log-front:
-	docker logs front -f
+	docker logs matcha_frontend -f
 
 enter-back:
 	docker exec -it matcha_backend sh
@@ -37,7 +37,7 @@ enter-db:
 	docker exec -it matcha_database sh
 
 enter-front:
-	docker exec -it front sh
+	docker exec -it matcha_frontend sh
 
 info:
 	@echo "\033[1;33mall:\033[m"
