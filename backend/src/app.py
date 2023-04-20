@@ -31,7 +31,7 @@ confirmation_cod, \
 confirmation_tim \
 ) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id"
 
-user_att = ['id', 'first_name', 'last_name', 'details', 'nickname', 'email', 'confirmation_cod', 'confirmation_tim']
+user_att = ['id', 'password', 'first_name', 'last_name', 'details', 'email', 'confirmation_cod', 'confirmation_tim']
 
 app = Flask(__name__)
 
@@ -48,63 +48,24 @@ app = Flask(__name__)
 # connection = psycopg2.connect(url)
 # with current_app.open_resources('schema.sql') as f:
 #         connection.executescript(f.read().decode('utf8'))
-# print("\033[1;32mDatabase is connected !\033[m")
 
 connec = db.get_db()
+print("\033[1;32mDatabase is connected !\033[m")
 with connec:
     with connec.cursor() as cursor:
-        # cursor.execute('DROP TABLE IF EXISTS user_account')
-        cursor.execute(CREATE_USER_ACCOUNT_TABLE)
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    message=''
-    first_name =''
-    last_name = ''
-    details = ''
-    email = ''
-    nickname = ''
-    confirmation_cod = ''
-    confirmation_tim = time.time()
-    form = request.form
-    if request.method == 'POST' and 'first_name' in form and 'last_name' in form and 'email' in form:
-        first_name = form['first_name']
-        last_name = form['last_name']
-        email = form['email']
-        with connec:
-            with connec.cursor() as cursor:
-                cursor.execute('SELECT * FROM user_account WHERE email = %s', (email,))
-                account = cursor.fetchone()
-                if account:
-                    message = "This account already exists !"
-                elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-                    message = 'Invalid email address !'
-                elif not first_name or not last_name or not email:
-                    message = 'Please fill out the form !'
-                else:
-                    if 'details' in form:
-                        details = form['details']
-                    if 'nickname' in form:
-                        nickname = form['nickname']
-                    else:
-                        nickname = first_name
-                    if 'confirmation_cod' in form:
-                        confirmation_cod = form['confirmation_cod']
-                    cursor.execute(INSERT_USER_RETURN_ID, (first_name, last_name, details, nickname, email, confirmation_cod, confirmation_tim))
-                    user_id = cursor.fetchone()[0]
-                    message = f"You have successfully registered !\n id: {user_id}"
-    elif request.method == 'POST':
-        message = 'Please fill out the form !'
-    return message
+        cursor.execute('DROP TABLE IF EXISTS user_account')
+        cursor.execute(db.CREATE_USER_ACCOUNT_TABLE)
 
 @app.get("/users/<int:id>")
 def get_user_by_id(id):
     with connec:
         with connec.cursor() as cursor:
             cursor.execute('SELECT * FROM user_account WHERE id = %s', (id,))
-            user = dict(zip(user_att, cursor.fetchone()))
-            # user = str(cursor.fetchone())
-            return user
+            existant = cursor.fetchone()
+            if existant:
+                user = dict(zip(user_att, existant))
+                return user
+            return {}
         
 @app.get("/users/all")
 def get_all_users():

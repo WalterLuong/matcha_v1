@@ -3,29 +3,43 @@ import psycopg2
 from dotenv import load_dotenv
 from flask import Flask, request
 
+##########################################################################
+#                               USER TABLE                               #
+##########################################################################
+
 CREATE_USER_ACCOUNT_TABLE = (
     "CREATE TABLE IF NOT EXISTS user_account ( \
         id SERIAL PRIMARY KEY, \
+        password TEXT NOT NULL, \
         first_name VARCHAR(64) NOT NULL, \
         last_name VARCHAR(64) NOT NULL, \
         details TEXT, \
-        nickname VARCHAR(64), \
-        email VARCHAR(64) UNIQUE NOT NULL, \
+        email VARCHAR(128) UNIQUE NOT NULL, \
         confirmation_cod TEXT, \
         confirmation_tim INT \
     )"
 )
 
-INSERT_USER_RETURN_ID = "INSERT INTO user_account \
-(\
+INSERT_USER_RETURN_ID = "INSERT INTO user_account ( \
+password, \
 first_name, \
 last_name, \
 details, \
-nickname, \
 email, \
 confirmation_cod, \
-confirmation_tim \
-) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id"
+confirmation_tim ) \
+VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id"
+
+##########################################################################
+#                              GENDER TABLE                              #
+##########################################################################
+
+CREATE_GENDER_TABLE = (
+    "CREATE TABLE IF NOT EXISTS gender ( \
+    id SERIAL PRIMARY KEY, \
+    name VARCHAR(32) \
+    )"
+)
 
 def get_db():
     load_dotenv()
