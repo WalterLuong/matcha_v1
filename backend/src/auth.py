@@ -1,13 +1,17 @@
 import db
 import time
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 from werkzeug.security import check_password_hash, generate_password_hash
-from constants import http_status_code
+from constants import http_status_code as CODE
 from validators import is_email, is_name, is_strong_password
+from flask_jwt_extended import create_access_token, create_refresh_token
+
 
 auth = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
 user_att = ['id', 'password', 'first_name', 'last_name', 'details', 'email', 'confirmation_cod', 'confirmation_tim']
 new_user_att = ['password', 'first_name', 'last_name', 'details', 'email', 'confirmation_cod', 'confirmation_tim']
+login_user_att = ['password', 'email']
+
 connec = db.get_db()
 
 def mandatory_attributes(form):
@@ -26,6 +30,7 @@ def mandatory_attributes(form):
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     form = request.form
+    code = CODE.HTTP_400_BAD_REQUEST
     if request.method == 'POST' and mandatory_attributes(form):
         User = dict(zip(new_user_att, ['' for i in range(len(new_user_att))]))
         for form_keys in form.keys():
@@ -50,29 +55,30 @@ def register():
                     cursor.execute(db.INSERT_USER_RETURN_ID, tuple(User.values()))
                     user_id = cursor.fetchone()[0]
                     message = f"You have successfully registered !\n id: {user_id}"
+                    code = CODE.HTTP_201_CREATED
     elif request.method == 'POST':
         message = 'Please fill out the form !'
-    return message
+    return message, code
 
-# @auth.post('/register')
-# def register():
-#     username = request.json['username']
-#     email = request.json['email']
-#     password = request.json['password']
-
-#     if len(password) < 6:
-#         return jsonify({"error" : "Password is too short"}), HTTP_400_BAD_REQUEST
-    
-#     if len(username) < 3:
-#         return jsonify({"error" : "Username is too short"}), HTTP_400_BAD_REQUEST
-
-#     if not username.isalnum() or " " in username:
-#         return jsonify({"error" : "Username should be alphanumeric, also no spaces"}), HTTP_400_BAD_REQUEST
-
-#     pwd_hash = generate_password_hash(password)
-
-#     return "User created"
-
+@auth.post('/login')
+def login():
+    form = request.form
+    email = form['email']
+    password = form['password']
+    with connec:
+        with connec.cursor() as cursor:
+            cursor.execute('SELECT id, password FROM user_account WHERE email = %s', (email,))
+            user = cursor.fetchone()
+            if user:
+                user = dict(zip(['id', 'password'], user))
+                is_pass_correct = check_password_hash(user['password'], password)
+                if is_pass_correct:
+                    refresh =create_refresh_token(identity=user['id'])
+                    access =create_refresh_token(identity=user['id'])
+                
+                    return {'user':dict(zip(['refresh', 'access', 'id', 'email'], [refresh, access, user['id'], email]))}
+                return {"error" : "Wrong password"}, CODE.HTTP_401_UNAUTHORIZED
+            return {"error" : "Wrong email address"}, CODE.HTTP_401_UNAUTHORIZED
 @auth.get("/me")
 def me():
     return {"user": "me"}

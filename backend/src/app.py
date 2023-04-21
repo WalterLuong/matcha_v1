@@ -3,9 +3,8 @@ import psycopg2
 from dotenv import load_dotenv
 from flask import Flask, request, current_app
 from auth import auth
-import time
-import re
 import db
+from flask_jwt_extended import JWTManager
 
 CREATE_USER_ACCOUNT_TABLE = (
     "CREATE TABLE IF NOT EXISTS user_account ( \
@@ -32,7 +31,7 @@ confirmation_tim \
 ) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id"
 
 user_att = ['id', 'password', 'first_name', 'last_name', 'details', 'email', 'confirmation_cod', 'confirmation_tim']
-
+profile = ['id', 'first_name', "details"]
 app = Flask(__name__)
 
 load_dotenv()
@@ -49,6 +48,11 @@ load_dotenv()
 # with current_app.open_resources('schema.sql') as f:
 #         connection.executescript(f.read().decode('utf8'))
 
+app.config.from_mapping(
+    SECRET_KEY=os.environ.get("SECRET_KEY"),
+    JWT_SECRET_KEY=os.environ.get("JWT_SECRET_KEY")
+)
+
 connec = db.get_db()
 print("\033[1;32mDatabase is connected !\033[m")
 with connec:
@@ -56,14 +60,16 @@ with connec:
         cursor.execute('DROP TABLE IF EXISTS user_account')
         cursor.execute(db.CREATE_USER_ACCOUNT_TABLE)
 
+JWTManager(app)
+
 @app.get("/users/<int:id>")
 def get_user_by_id(id):
     with connec:
         with connec.cursor() as cursor:
-            cursor.execute('SELECT * FROM user_account WHERE id = %s', (id,))
+            cursor.execute('SELECT id, first_name, details FROM user_account WHERE id = %s', (id,))
             existant = cursor.fetchone()
             if existant:
-                user = dict(zip(user_att, existant))
+                user = dict(zip(profile, existant))
                 return user
             return {}
 

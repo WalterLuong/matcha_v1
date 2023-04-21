@@ -41,6 +41,8 @@ CREATE_GENDER_TABLE = (
     )"
 )
 
+# CREATE_INTERESTED_IN_GENDER_TABLE 
+
 def get_db():
     load_dotenv()
     url = os.getenv("DATABASE_URL")
