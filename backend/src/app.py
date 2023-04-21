@@ -35,7 +35,7 @@ user_att = ['id', 'password', 'first_name', 'last_name', 'details', 'email', 'co
 
 app = Flask(__name__)
 
-# load_dotenv()
+load_dotenv()
 
 # url = os.getenv("DATABASE_URL")
 
@@ -90,4 +90,4 @@ def say_hello():
 app.register_blueprint(auth)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=os.getenv("PORT"))
