@@ -4,7 +4,7 @@ from flask import Blueprint, request
 from werkzeug.security import check_password_hash, generate_password_hash
 from constants import http_status_code as CODE
 from validators import is_email, is_name, is_strong_password
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import  jwt_required , create_access_token, create_refresh_token, get_jwt_identity
 
 
 auth = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
@@ -74,11 +74,22 @@ def login():
                 is_pass_correct = check_password_hash(user['password'], password)
                 if is_pass_correct:
                     refresh =create_refresh_token(identity=user['id'])
-                    access =create_refresh_token(identity=user['id'])
-                
+                    access =create_access_token(identity=user['id'])
                     return {'user':dict(zip(['refresh', 'access', 'id', 'email'], [refresh, access, user['id'], email]))}
                 return {"error" : "Wrong password"}, CODE.HTTP_401_UNAUTHORIZED
             return {"error" : "Wrong email address"}, CODE.HTTP_401_UNAUTHORIZED
+
+
 @auth.get("/me")
+@jwt_required()
 def me():
-    return {"user": "me"}
+    from app import get_user_by_id
+    user_id = get_jwt_identity() 
+    return {'id': user_id}, CODE.HTTP_200_OK
+
+@auth.get('/token/refresh')
+@jwt_required(refresh=True)
+def refresh_users_token():
+    identity = get_jwt_identity()
+    access = create_access_token(identity=identity)
+    return {'access': access}, CODE.HTTP_200_OK
