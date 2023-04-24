@@ -2,9 +2,12 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 from flask import Flask, request, current_app
-from auth import auth
-import db
+from services.auth import auth as auth
+import src.services.database.db as db
 from flask_jwt_extended import JWTManager
+from constants import http_status_code as CODE
+from flasgger import Swagger, swag_from
+from config import swagger as swg
 
 CREATE_USER_ACCOUNT_TABLE = (
     "CREATE TABLE IF NOT EXISTS user_account ( \
@@ -50,11 +53,15 @@ load_dotenv()
 
 app.config.from_mapping(
     SECRET_KEY=os.environ.get("SECRET_KEY"),
-    JWT_SECRET_KEY=os.environ.get("JWT_SECRET_KEY")
+    JWT_SECRET_KEY=os.environ.get("JWT_SECRET_KEY"),
+
+    SWAGGER={
+        'title':'Matcha API',
+        'uiversion':3
+    },
 )
 
 connec = db.get_db()
-print("\033[1;32mDatabase is connected !\033[m")
 with connec:
     with connec.cursor() as cursor:
         cursor.execute('DROP TABLE IF EXISTS user_account')
@@ -62,38 +69,16 @@ with connec:
 
 JWTManager(app)
 
-@app.get("/users/<int:id>")
-def get_user_by_id(id):
-    with connec:
-        with connec.cursor() as cursor:
-            cursor.execute('SELECT id, first_name, details FROM user_account WHERE id = %s', (id,))
-            existant = cursor.fetchone()
-            if existant:
-                user = dict(zip(profile, existant))
-                return user
-            return {}
+@app.errorhandler(CODE.HTTP_404_NOT_FOUND)
+def handle_404(e):
+    return {"error": "Content not found"}, CODE.HTTP_404_NOT_FOUND
 
-        
-@app.get("/users/all")
-def get_all_users():
-    with connec:
-        with connec.cursor() as cursor:
-            cursor.execute('SELECT * FROM user_account')
-            user = []
-            for row in cursor.fetchall():
-                user.append(dict(zip(user_att, row)))
-            return user
+@app.errorhandler(CODE.HTTP_500_INTERNAL_SERVER_ERROR)
+def handle_500(e):
+    return {"error": "Something were wrong, please try again."}, CODE.HTTP_500_INTERNAL_SERVER_ERROR
 
-
-@app.get("/")
-def main_page():
-    return "Hello World"
-
-@app.get("/hello")
-def say_hello():
-    return {"message": "Hello World"}
-
-app.register_blueprint(auth)
+app.register_blueprint(auth.auth)
+Swagger(app, config = swg.swagger_config)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=os.getenv("PORT"))

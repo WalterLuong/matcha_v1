@@ -1,10 +1,11 @@
-import db
+from services.database import db as db
 import time
 from flask import Blueprint, request
 from werkzeug.security import check_password_hash, generate_password_hash
 from constants import http_status_code as CODE
-from validators import is_email, is_name, is_strong_password
+from validators.validators import is_email, is_name, is_strong_password
 from flask_jwt_extended import  jwt_required , create_access_token, create_refresh_token, get_jwt_identity
+from flasgger import swag_from
 
 
 auth = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
@@ -27,9 +28,10 @@ def mandatory_attributes(form):
             return False
     return True
 
-@auth.route('/register', methods=['GET', 'POST'])
+@auth.post('/register')
+@swag_from('./docs/auth/register.yml')
 def register():
-    form = request.form
+    form = request.get_json()
     code = CODE.HTTP_400_BAD_REQUEST
     if request.method == 'POST' and mandatory_attributes(form):
         User = dict(zip(new_user_att, ['' for i in range(len(new_user_att))]))
@@ -61,8 +63,9 @@ def register():
     return message, code
 
 @auth.post('/login')
+@swag_from('./docs/auth/login.yml')
 def login():
-    form = request.form
+    form = request.get_json()
     email = form['email']
     password = form['password']
     with connec:
@@ -89,6 +92,7 @@ def me():
 
 @auth.get('/token/refresh')
 @jwt_required(refresh=True)
+@swag_from("./docs/auth/refresh_token.yml")
 def refresh_users_token():
     identity = get_jwt_identity()
     access = create_access_token(identity=identity)
