@@ -1,11 +1,12 @@
-from services.database import db as db
 import time
 from flask import Blueprint, request
 from werkzeug.security import check_password_hash, generate_password_hash
-from constants import http_status_code as CODE
-from validators.validators import is_email, is_name, is_strong_password
 from flask_jwt_extended import  jwt_required , create_access_token, create_refresh_token, get_jwt_identity
 from flasgger import swag_from
+
+from services.database import db as db
+from constants import http_status_code as CODE
+from services.validators.validators import is_email, is_name, is_strong_password
 
 
 auth = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
@@ -29,7 +30,7 @@ def mandatory_attributes(form):
     return True
 
 @auth.post('/register')
-@swag_from('./docs/auth/register.yml')
+@swag_from('../../docs/auth/register.yml')
 def register():
     form = request.get_json()
     code = CODE.HTTP_400_BAD_REQUEST
@@ -63,7 +64,7 @@ def register():
     return message, code
 
 @auth.post('/login')
-@swag_from('./docs/auth/login.yml')
+@swag_from('../../docs/auth/login.yml')
 def login():
     form = request.get_json()
     email = form['email']
@@ -83,16 +84,16 @@ def login():
             return {"error" : "Wrong email address"}, CODE.HTTP_401_UNAUTHORIZED
 
 
-@auth.get("/me")
+@auth.get('/me')
 @jwt_required()
+@swag_from("../../docs/auth/me.yml")
 def me():
-    from app import get_user_by_id
     user_id = get_jwt_identity() 
     return {'id': user_id}, CODE.HTTP_200_OK
 
 @auth.get('/token/refresh')
 @jwt_required(refresh=True)
-@swag_from("./docs/auth/refresh_token.yml")
+@swag_from("../../docs/auth/refresh_token.yml")
 def refresh_users_token():
     identity = get_jwt_identity()
     access = create_access_token(identity=identity)

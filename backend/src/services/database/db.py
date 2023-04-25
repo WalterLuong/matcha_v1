@@ -52,5 +52,4 @@ def get_db():
         print("\033[1;31mDatabase is not ready...\033[m")
         exit(1)
     connection = psycopg2.connect(url)
-    print("\033[1;32mDatabase is connected !\033[m")
     return connection

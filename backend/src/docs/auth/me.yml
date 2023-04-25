@@ -1,0 +1,16 @@
+User me
+---
+tags:
+  - Authentication
+parameters:
+  - summary: Access Token
+    description: The Authentication header should be an access token
+    in: header
+    name: Authorization
+    required: true
+responses:
+  200:
+    description: The current user id and name are returned
+
+  401:
+    description: An user supplies a bad access token
