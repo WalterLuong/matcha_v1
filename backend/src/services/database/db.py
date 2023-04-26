@@ -37,11 +37,36 @@ VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id"
 CREATE_GENDER_TABLE = (
     "CREATE TABLE IF NOT EXISTS gender ( \
     id SERIAL PRIMARY KEY, \
+    name VARCHAR(32) UNIQUE NOT NULL\
+    )"
+)
+
+CREATE_INTERESTED_IN_GENDER_TABLE = (
+    "CREATE TABLE IF NOT EXISTS interested_in_gender ( \
+    id SERIAL PRIMARY KEY, \
+    FOREIGN KEY(user_account_id) REFERENCES user_account(id) ON DELETE CASCADE,\
+    FOREIGN KEY(gender_id) REFERENCES gender(id) ON DELETE CASCADE\
+    )"
+)
+
+##########################################################################
+#                              RELATIONSHIP                              #
+##########################################################################
+
+CREATE_RELATIONSHIP_TYPE_TABLE = (
+    "CREATE TABLE IF NOT EXISTS relationship_type ( \
+    id SERIAL PRIMARY KEY,\
     name VARCHAR(32) \
     )"
 )
 
-# CREATE_INTERESTED_IN_GENDER_TABLE 
+CREATE_INTERESTED_IN_RELATION_TABLE = (
+    "CREATE TABLE IF NOT EXISTS interested_in_relation ( \
+    id SERIAL PRIMARY KEY,\
+    FOREIGN KEY(user_account_id) REFERENCES user_account(id) ON DELETE CASCADE,\
+    FOREIGN KEY(relationship_type_id) REFERENCES relationship_type(id) ON DELETE CASCADE,\
+    )"
+)
 
 def get_db():
     load_dotenv()
