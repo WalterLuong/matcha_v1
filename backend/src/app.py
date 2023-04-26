@@ -28,12 +28,8 @@ app.config.from_mapping(
 )
 
 connec = db.get_db()
+db.init_db(connec)
 print("\033[1;32mDatabase is connected !\033[m")
-
-with connec:
-    with connec.cursor() as cursor:
-        cursor.execute('DROP TABLE IF EXISTS user_account')
-        cursor.execute(db.CREATE_USER_ACCOUNT_TABLE)
 
 JWTManager(app)
 

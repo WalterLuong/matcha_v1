@@ -13,22 +13,25 @@ CREATE_USER_ACCOUNT_TABLE = (
         password TEXT NOT NULL, \
         first_name VARCHAR(64) NOT NULL, \
         last_name VARCHAR(64) NOT NULL, \
+        gender_id INT REFERENCES gender(id),\
         details TEXT, \
         email VARCHAR(128) UNIQUE NOT NULL, \
         confirmation_cod TEXT, \
         confirmation_tim INT \
     )"
 )
+        # FOREIGN KEY(gender_id) REFERENCES gender(id) ON DELETE CASCADE, \
 
 INSERT_USER_RETURN_ID = "INSERT INTO user_account ( \
 password, \
 first_name, \
 last_name, \
+gender_id, \
 details, \
 email, \
 confirmation_cod, \
 confirmation_tim ) \
-VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id"
+VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id"
 
 ##########################################################################
 #                              GENDER TABLE                              #
@@ -40,6 +43,9 @@ CREATE_GENDER_TABLE = (
     name VARCHAR(32) UNIQUE NOT NULL\
     )"
 )
+
+INSERT_GENDER_RETURN_ID = "INSERT INTO gender ( \
+name) VALUES (%s) RETURNING id"
 
 CREATE_INTERESTED_IN_GENDER_TABLE = (
     "CREATE TABLE IF NOT EXISTS interested_in_gender ( \
@@ -78,3 +84,14 @@ def get_db():
         exit(1)
     connection = psycopg2.connect(url)
     return connection
+
+def init_db(connec):
+    with connec:
+        with connec.cursor() as cursor:
+            cursor.execute('DROP TABLE IF EXISTS gender CASCADE')
+            cursor.execute(CREATE_GENDER_TABLE)
+            cursor.execute(INSERT_GENDER_RETURN_ID, ("male",))
+            cursor.execute(INSERT_GENDER_RETURN_ID, ("female",))
+            cursor.execute(INSERT_GENDER_RETURN_ID, ("non-binary",))
+            cursor.execute('DROP TABLE IF EXISTS user_account CASCADE')
+            cursor.execute(CREATE_USER_ACCOUNT_TABLE)

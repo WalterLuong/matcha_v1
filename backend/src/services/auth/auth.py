@@ -1,5 +1,5 @@
 import time
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_jwt_extended import  jwt_required , create_access_token, create_refresh_token, get_jwt_identity
 from flasgger import swag_from
@@ -17,7 +17,7 @@ login_user_att = ['password', 'email']
 connec = db.get_db()
 
 def mandatory_attributes(form):
-    attributes = ['first_name', 'last_name', 'email', 'password']
+    attributes = ['first_name', 'last_name', 'email', 'password', 'gender_id']
     for column in attributes:
         if not column in form:
             return False
@@ -53,6 +53,8 @@ def register():
                     message = "Not a valid first name"
                 elif not is_name(User['last_name']):
                     message = "Not a valid last name"
+                elif not isinstance(User['gender_id'], int) or User['gender_id'] > 2:
+                    message = "Bad gender"
                 else:
                     User['password'] = generate_password_hash(User['password'])
                     cursor.execute(db.INSERT_USER_RETURN_ID, tuple(User.values()))
@@ -79,9 +81,9 @@ def login():
                 if is_pass_correct:
                     refresh =create_refresh_token(identity=user['id'])
                     access =create_access_token(identity=user['id'])
-                    return {'user':dict(zip(['refresh', 'access', 'id', 'email'], [refresh, access, user['id'], email]))}
-                return {"error" : "Wrong password"}, CODE.HTTP_401_UNAUTHORIZED
-            return {"error" : "Wrong email address"}, CODE.HTTP_401_UNAUTHORIZED
+                    return jsonify({'user':dict(zip(['refresh', 'access', 'id', 'email'], [refresh, access, user['id'], email]))}), CODE.HTTP_200_OK
+                return jsonify({"error" : "Wrong password"}), CODE.HTTP_401_UNAUTHORIZED
+            return jsonify({"error" : "Wrong email address"}), CODE.HTTP_401_UNAUTHORIZED
 
 
 @auth.get('/me')
@@ -89,7 +91,7 @@ def login():
 @swag_from("../../docs/auth/me.yml")
 def me():
     user_id = get_jwt_identity() 
-    return {'id': user_id}, CODE.HTTP_200_OK
+    return jsonify({'id': user_id}), CODE.HTTP_200_OK
 
 @auth.get('/token/refresh')
 @jwt_required(refresh=True)
@@ -97,4 +99,4 @@ def me():
 def refresh_users_token():
     identity = get_jwt_identity()
     access = create_access_token(identity=identity)
-    return {'access': access}, CODE.HTTP_200_OK
+    return jsonify({'access': access}), CODE.HTTP_200_OK
