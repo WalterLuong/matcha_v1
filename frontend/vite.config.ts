@@ -7,7 +7,7 @@ export default ({ mode }) => {
   plugins: [vue()],
   server: {
     host: '0.0.0.0',
-    port: parseInt(process.env.FRONT_PORT),
+    port: parseInt(process.env.FRONT_PORT) || 3000,
   }
 })
 }

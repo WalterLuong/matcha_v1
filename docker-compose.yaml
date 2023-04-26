@@ -68,7 +68,8 @@ services:
     networks:
       - api_network
     volumes:
-      - ./frontend/app:/home/node/app
+      - ./frontend:/home/node/app
+      - /home/node/app/node_modules
 
 networks:
   postgres:
