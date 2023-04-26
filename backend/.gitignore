@@ -1,7 +1,5 @@
 .env
 /.venv
 .flaskenv
-*/__pycache__/
-*/*/__pycache__/
-*/*/*/__pycache__/
-*/*/*/*/__pycache__/
+**/__pycache__/
+**/*.pyc
