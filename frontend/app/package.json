@@ -11,7 +11,7 @@
   "dependencies": {
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
-    "vuex": "^4.1.0"
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@types/node": "^18.15.13",
