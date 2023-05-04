@@ -29,3 +29,15 @@ def get_all_users():
             for row in cursor.fetchall():
                 user.append(jsonify(dict(zip(user_att, row))))
             return user
+        
+@user.get("/gender/<int:id>")
+def get_gender_name_user_id(id):
+    with connec:
+        with connec.cursor() as cursor:
+            cursor.execute('SELECT gender_id FROM user_account WHERE id = %s', (id,))
+            user = cursor.fetchone()
+            if user:
+                cursor.execute('SELECT name FROM gender WHERE id = %s', (user))
+                name = cursor.fetchone()[0]
+                return jsonify({"name": name})
+            return jsonify({})

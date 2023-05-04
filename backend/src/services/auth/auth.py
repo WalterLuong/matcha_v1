@@ -10,8 +10,8 @@ from services.validators.validators import is_email, is_name, is_strong_password
 
 
 auth = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
-user_att = ['id', 'password', 'first_name', 'last_name', 'details', 'email', 'confirmation_cod', 'confirmation_tim']
-new_user_att = ['password', 'first_name', 'last_name', 'details', 'email', 'confirmation_cod', 'confirmation_tim']
+user_att = ['id', 'password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim']
+new_user_att = ['password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim']
 login_user_att = ['password', 'email']
 
 connec = db.get_db()
@@ -32,7 +32,7 @@ def mandatory_attributes(form):
 @auth.post('/register')
 @swag_from('../../docs/auth/register.yml')
 def register():
-    form = request.get_json()
+    form = request.form
     code = CODE.HTTP_400_BAD_REQUEST
     if request.method == 'POST' and mandatory_attributes(form):
         User = dict(zip(new_user_att, ['' for i in range(len(new_user_att))]))
@@ -53,8 +53,6 @@ def register():
                     message = "Not a valid first name"
                 elif not is_name(User['last_name']):
                     message = "Not a valid last name"
-                elif not isinstance(User['gender_id'], int) or User['gender_id'] > 2:
-                    message = "Bad gender"
                 else:
                     User['password'] = generate_password_hash(User['password'])
                     cursor.execute(db.INSERT_USER_RETURN_ID, tuple(User.values()))
