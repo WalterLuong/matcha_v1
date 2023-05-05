@@ -12,10 +12,8 @@ export default defineComponent({
 		
 	},
 
-	beforeRouteEnter(to: any, from: any) {
-		
-		console.log("cooucou", to , from)
-  	},
-
+	// beforeRouteEnter(to: any, from: any) {
+	// 	console.log("cooucou", to , from)
+  	// },
 })
 </script>

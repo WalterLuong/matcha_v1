@@ -1,6 +1,27 @@
 <template>
 	<div>
 		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
+		<h1>HOME</h1>
 		<p>Name is store is: {{ name }}</p>
 	</div>
 </template>
@@ -19,3 +40,8 @@ const name = computed(() => {
 
 </script>
 
+
+
+<style>
+
+</style>
