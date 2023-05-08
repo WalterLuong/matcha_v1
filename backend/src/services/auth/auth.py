@@ -1,5 +1,6 @@
-import time
-from flask import Blueprint, request, jsonify
+import datetime
+import math, random
+from flask import Blueprint, request, jsonify, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_jwt_extended import  jwt_required , create_access_token, create_refresh_token, get_jwt_identity
 from flasgger import swag_from
@@ -7,11 +8,13 @@ from flasgger import swag_from
 from services.database import db as db
 from constants import http_status_code as CODE
 from services.validators.validators import is_email, is_name, is_strong_password
+from services.mail.mail_token import generate_confirmation_token, confirm_token
+from services.mail.mail_confirmation import send_email
 
 
 auth = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
-user_att = ['id', 'password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim']
-new_user_att = ['password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim']
+user_att = ['id', 'password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim', 'confirmed']
+new_user_att = ['password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim', 'confirmed']
 login_user_att = ['password', 'email']
 
 connec = db.get_db()
@@ -29,6 +32,14 @@ def mandatory_attributes(form):
             return False
     return True
 
+def generateOTP():
+    string = '0123456789ABCDEFGHIJKLMNOPRSTUVWXYZ'
+    OTP = ""
+    for i in range(6):
+        OTP += string[math.floor(random.random() * len(string))]
+    return OTP
+
+
 @auth.post('/register')
 @swag_from('../../docs/auth/register.yml')
 def register():
@@ -38,7 +49,9 @@ def register():
         User = dict(zip(new_user_att, ['' for i in range(len(new_user_att))]))
         for form_keys in form.keys():
             User[form_keys] = form[form_keys]
-        User['confirmation_tim'] = time.time()
+            User['confirmed'] = False
+            User['confirmation_tim'] = None
+            User['confirmation_cod'] = generateOTP()
         with connec:
             with connec.cursor() as cursor:
                 cursor.execute('SELECT * FROM user_account WHERE email = %s', (User['email'],))
@@ -59,6 +72,7 @@ def register():
                     user_id = cursor.fetchone()[0]
                     message = f"You have successfully registered !\n id: {user_id}"
                     code = CODE.HTTP_201_CREATED
+                    token = generate_confirmation_token(User['email'])
     elif request.method == 'POST':
         message = 'Please fill out the form !'
     return message, code

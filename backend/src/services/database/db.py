@@ -17,7 +17,8 @@ CREATE_USER_ACCOUNT_TABLE = (
         details TEXT, \
         email VARCHAR(128) UNIQUE NOT NULL, \
         confirmation_cod TEXT, \
-        confirmation_tim INT \
+        confirmation_tim TIMESTAMP, \
+        confirmed BOOL \
     )"
 )
         # FOREIGN KEY(gender_id) REFERENCES gender(id) ON DELETE CASCADE, \
@@ -30,8 +31,9 @@ gender_id, \
 details, \
 email, \
 confirmation_cod, \
-confirmation_tim ) \
-VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id"
+confirmation_tim, \
+confirmed ) \
+VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id"
 
 ##########################################################################
 #                              GENDER TABLE                              #

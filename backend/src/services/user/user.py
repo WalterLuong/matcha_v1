@@ -1,7 +1,8 @@
 from flask import Blueprint, request, jsonify
 from services.database import db as db
 
-user_att = ['id', 'password', 'first_name', 'last_name', 'details', 'email', 'confirmation_cod', 'confirmation_tim']
+user_att = ['id', 'password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim', 'confirmed']
+new_user_att = ['password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim', 'confirmed']
 profile = ['id', 'first_name', "details"]
 
 connec = db.get_db()
@@ -40,4 +41,15 @@ def get_gender_name_user_id(id):
                 cursor.execute('SELECT name FROM gender WHERE id = %s', (user))
                 name = cursor.fetchone()[0]
                 return jsonify({"name": name})
+            return jsonify({})
+        
+@user.get("/all-details/<int:id>")
+def get_user_details(id):
+    with connec:
+        with connec.cursor() as cursor:
+            cursor.execute('SELECT * FROM user_account WHERE id = %s', (id,))
+            existant = cursor.fetchone()
+            if existant:
+                user = dict(zip(user_att, existant))
+                return jsonify(user)
             return jsonify({})
