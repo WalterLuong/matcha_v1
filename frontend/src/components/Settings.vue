@@ -60,7 +60,7 @@ export default defineComponent({
 #profile_picture {
 	position: absolute;
 	bottom: 0;
-	right: 0;
+	left: -55px;
 	background-color: red;
 
 	width: 75px;

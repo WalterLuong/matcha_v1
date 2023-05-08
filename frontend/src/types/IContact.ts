@@ -8,7 +8,7 @@ export enum EStatus {
 }
 
 export type IContact = {
-    createdAt: Date;
+    createdAt?: Date;
 	chatId: number;
 	user: IUser;
 	lastMessage: string;

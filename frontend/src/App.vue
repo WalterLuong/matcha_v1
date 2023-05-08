@@ -7,10 +7,10 @@ export default defineComponent({
 	data() {
 		return {
 			Notification: [] as INotification[],
-			n_view: 1 as number,
-			n_match: 12 as number,
-			n_unmatch: 1 as number,
-			n_message: 0 as number,
+			n_view: 0 as number,
+			n_match: 8 as number,
+			n_unmatch: 3 as number,
+			n_message: 9 as number,
 		}
 	},
 
@@ -103,8 +103,8 @@ export default defineComponent({
 		flex-direction: column;
 		overflow-y: scroll;
 
-		height: calc(100vh - 65px);
-		width: calc(100vw - 35px);
+		height: calc(100vh - 63px);
+		width: calc(100vw - 28px);
 
 		background-color: blueviolet;
 	}

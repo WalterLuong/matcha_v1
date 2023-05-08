@@ -5,6 +5,7 @@ import ChatView from '../components/Chat.vue'
 import ChatRoomView from '../components/ChatRoom.vue'
 import MatchView from '../components/Match.vue'
 import LoginView from '../components/Login.vue'
+import MatchMenu from '../components/MatchMenu.vue'
 
 const routes: Array<RouteConfig> = [
 	{
@@ -14,7 +15,7 @@ const routes: Array<RouteConfig> = [
 	},{
 		path: '/match',
 		name: 'MatchMenu',
-		component: MatchView,
+		component: MatchMenu,
 	},{
 		path: '/classicMatch',
 		name: 'MatchClassic',
