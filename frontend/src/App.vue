@@ -1,7 +1,9 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 import SettingsVue from './components/Settings.vue'
-import { INotification } from "./types"
+import { INotification, NotifPack } from "./types"
+import { useStore } from 'vuex'
+
 
 export default defineComponent({
 	data() {
@@ -14,13 +16,26 @@ export default defineComponent({
 		}
 	},
 
-	components: { SettingsVue }
+	components: { SettingsVue },
+
+
+	setup() {
+		const store = useStore();
+
+		const notif: NotifPack = computed(() => store.getters.getNumberOfNotification() );
+
+		return { }
+	},
+ 
 
 	// beforeRouteEnter(to: any, from: any) {
 	// 	console.log("cooucou", to , from)
   	// },
 })
 </script>
+
+
+
 
 <template>
 	<div>

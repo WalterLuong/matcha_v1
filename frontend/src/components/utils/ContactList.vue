@@ -12,16 +12,8 @@ export default defineComponent({
 	},
 
 	setup() {
-
 		const store = useStore();
     	const contactList: IContact[] = computed(() =>  store.state.contact.contact );
-
-		// const store = useStore();
-		
-		// const contactList: IContact[] = computed(() => {
-		// 	return store.state.contacts;
-		// });
-		
 		console.log( store.state.contact.contact );
 		return { contactList };
 	},

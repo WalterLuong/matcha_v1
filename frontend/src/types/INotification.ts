@@ -7,9 +7,16 @@ export enum ENotif {
 	DEL, // unmatch
 }
 
+export type NotifPack = {
+	n_unmatch: number,
+	n_view: number,
+	n_match: number,
+	n_message: number,
+}
+
 export type INotification = {
 	type: ENotif;
 	contact: IContact;
-    createdAt: Date;
+    createdAt: number;
 	notifId: number;
 }
