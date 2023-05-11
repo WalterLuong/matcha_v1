@@ -13,11 +13,12 @@ CREATE_USER_ACCOUNT_TABLE = (
         password TEXT NOT NULL, \
         first_name VARCHAR(64) NOT NULL, \
         last_name VARCHAR(64) NOT NULL, \
-        gender_id INT REFERENCES gender(id),\
+        gender_id INT,\
         details TEXT, \
         email VARCHAR(128) UNIQUE NOT NULL, \
         confirmation_cod TEXT, \
-        confirmation_tim INT \
+        confirmation_tim INT, \
+        CONSTRAINT fk_gender FOREIGN KEY(gender_id) REFERENCES gender(id) ON DELETE SET NULL\
     )"
 )
         # FOREIGN KEY(gender_id) REFERENCES gender(id) ON DELETE CASCADE, \
@@ -50,8 +51,10 @@ name) VALUES (%s) RETURNING id"
 CREATE_INTERESTED_IN_GENDER_TABLE = (
     "CREATE TABLE IF NOT EXISTS interested_in_gender ( \
     id SERIAL PRIMARY KEY, \
-    FOREIGN KEY(user_account_id) REFERENCES user_account(id) ON DELETE CASCADE,\
-    FOREIGN KEY(gender_id) REFERENCES gender(id) ON DELETE CASCADE\
+    user_account_id INT, \
+    gender_id INT, \
+    CONSTRAINT fk_user FOREIGN KEY(user_account_id) REFERENCES user_account(id) ON DELETE SET NULL,\
+    CONSTRAINT fk_gender FOREIGN KEY(gender_id) REFERENCES gender(id) ON DELETE SET NULL\
     )"
 )
 
@@ -69,9 +72,92 @@ CREATE_RELATIONSHIP_TYPE_TABLE = (
 CREATE_INTERESTED_IN_RELATION_TABLE = (
     "CREATE TABLE IF NOT EXISTS interested_in_relation ( \
     id SERIAL PRIMARY KEY,\
-    FOREIGN KEY(user_account_id) REFERENCES user_account(id) ON DELETE CASCADE,\
-    FOREIGN KEY(relationship_type_id) REFERENCES relationship_type(id) ON DELETE CASCADE,\
+    user_account_id INT, \
+    relationship_type_id INT, \
+    CONSTRAINT fk_user FOREIGN KEY(user_account_id) REFERENCES user_account(id) ON DELETE SET NULL,\
+    CONSTRAINT fk_relationship FOREIGN KEY(relationship_type_id) REFERENCES relationship_type(id) ON DELETE SET NULL\
     )"
+)
+
+##########################################################################
+#                              USER PHOTO                                #
+##########################################################################
+
+CREATE_USER_PHOTO_TABLE = (
+    "CREATE TABLE IF NOT EXISTS user_photo ( \
+    id SERIAL PRIMARY KEY, \
+    user_account_id INT, \
+    link TEXT NOT NULL, \
+    details TEXT, \
+    time_added INT, \
+    active BOOL, \
+    CONSTRAINT fk_user FOREIGN KEY(user_account_id) REFERENCES user_account(id) ON DELETE SET NULL \
+        )"
+)
+
+##########################################################################
+#                              MATCHS                                    #
+##########################################################################
+
+CREATE_MATCH_TABLE = (
+    """CREATE TABLE IF NOT EXISTS match (
+    id SERIAL PRIMARY KEY,
+    user_account_id_given INT,
+    user_account_id_received INT,
+    match BOOL,
+    CONSTRAINT fk_user_given FOREIGN KEY(user_account_id_given) REFERENCES user_account(id) ON DELETE SET NULL,
+    CONSTRAINT fk_user_received FOREIGN KEY(user_account_id_received) REFERENCES user_account(id) ON DELETE SET NULL
+    )
+    """
+)
+
+CREATE_BLOCK_USER_TABLE = (
+    """CREATE TABLE IF NOT EXISTS block_user (
+    id SERIAL PRIMARY KEY,
+    user_account_id INT,
+    user_account_id_blocked INT,
+    CONSTRAINT fk_user FOREIGN KEY(user_account_id) REFERENCES user_account(id) ON DELETE SET NULL,
+    CONSTRAINT fk_user_blocked FOREIGN KEY(user_account_id_blocked) REFERENCES user_account(id) ON DELETE SET NULL
+    )
+    """
+)
+
+##########################################################################
+#                                CHAT                                    #
+##########################################################################
+
+CREATE_CONVERSATION_TABLE = (
+    """CREATE TABLE IF NOT EXISTS conversation (
+    id SERIAL PRIMARY KEY,
+    user_account_id INT,
+    time_started TIMESTAMP,
+    time_closed TIMESTAMP DEFAULT NULL,
+    CONSTRAINT fk_user FOREIGN KEY(user_account_id) REFERENCES user_account(id) ON DELETE SET NULL
+    )
+    """
+)
+
+CREATE_PARTICIPANT_TABLE = (
+    """CREATE TABLE IF NOT EXISTS participant (
+    id SERIAL PRIMARY KEY,
+    conversation_id INT,
+    user_account_id INT,
+    time_joined TIMESTAMP,
+    time_left TIMESTAMP DEFAULT NULL,
+    CONSTRAINT fk_conversation FOREIGN KEY(conversation_id) REFERENCES conversation(id) ON DELETE SET NULL,
+    CONSTRAINT fk_user FOREIGN KEY(user_account_id) REFERENCES user_account(id) ON DELETE SET NULL
+    )"""
+)
+
+CREATE_MESSAGE_TABLE = (
+    """CREATE TABLE IF NOT EXISTS message (
+    id SERIAL PRIMARY KEY,
+    participant_id INT,
+    message_text TEXT,
+    ts TIMESTAMP,
+    CONSTRAINT fk_participant FOREIGN KEY(participant_id) REFERENCES participant(id) ON DELETE SET NULL
+    )
+    """
 )
 
 def get_db():
@@ -95,3 +181,21 @@ def init_db(connec):
             cursor.execute(INSERT_GENDER_RETURN_ID, ("non-binary",))
             cursor.execute('DROP TABLE IF EXISTS user_account CASCADE')
             cursor.execute(CREATE_USER_ACCOUNT_TABLE)
+            cursor.execute('DROP TABLE IF EXISTS interested_in_gender CASCADE')
+            cursor.execute(CREATE_INTERESTED_IN_GENDER_TABLE)
+            cursor.execute('DROP TABLE IF EXISTS relationship_type CASCADE')
+            cursor.execute(CREATE_RELATIONSHIP_TYPE_TABLE)
+            cursor.execute('DROP TABLE IF EXISTS interested_in_relation CASCADE')
+            cursor.execute(CREATE_INTERESTED_IN_RELATION_TABLE)
+            cursor.execute('DROP TABLE IF EXISTS user_photo CASCADE')
+            cursor.execute(CREATE_USER_PHOTO_TABLE)
+            cursor.execute('DROP TABLE IF EXISTS match CASCADE')
+            cursor.execute(CREATE_MATCH_TABLE)
+            cursor.execute('DROP TABLE IF EXISTS block_user CASCADE')
+            cursor.execute(CREATE_BLOCK_USER_TABLE)
+            cursor.execute('DROP TABLE IF EXISTS conversation CASCADE')
+            cursor.execute(CREATE_CONVERSATION_TABLE)
+            cursor.execute('DROP TABLE IF EXISTS participant CASCADE')
+            cursor.execute(CREATE_PARTICIPANT_TABLE)
+            cursor.execute('DROP TABLE IF EXISTS message CASCADE')
+            cursor.execute(CREATE_MESSAGE_TABLE)
