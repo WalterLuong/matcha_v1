@@ -1,49 +1,39 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import SettingsVue from './components/Settings.vue'
-import { INotification, NotifPack } from "./types"
-import { useStore } from 'vuex'
+import { INotification, NotifPack , ENotif} from "./types"
+import { useStore, mapGetters } from 'vuex'
 
 
 export default defineComponent({
-	data() {
-		return {
-			Notification: [] as INotification[],
-			n_view: 0 as number,
-			n_match: 8 as number,
-			n_unmatch: 3 as number,
-			n_message: 9 as number,
-		}
-	},
-
 	components: { SettingsVue },
-
 
 	setup() {
 		const store = useStore();
 
-		const notif: NotifPack = computed(() => store.getters.getNumberOfNotification() );
+	   
 
-		return { }
+		const data = computed(() => store.getters.getNumberOfNotification )
+		const notif: number[] = data.value.counts;
+
+
+		console.log( data );
+
+		return { notif }
+		
 	},
- 
 
-	// beforeRouteEnter(to: any, from: any) {
-	// 	console.log("cooucou", to , from)
-  	// },
 })
 </script>
-
-
 
 
 <template>
 	<div>
 		<div class="notification_container">
-			<div class="logo_notif" v-if="n_unmatch"><p>{{ n_unmatch }}</p></div>
-			<div class="logo_notif" v-if="n_view"><p>{{ n_view }}</p></div>
-			<div class="logo_notif" v-if="n_match"><p>{{ n_match }}</p></div>
-			<div class="logo_notif" v-if="n_message"><p>{{ n_message }}</p></div>
+			<div class="logo_notif" v-if="notif[3]"><p>{{ notif[3] }}</p></div>
+			<div class="logo_notif" v-if="notif[1]"><p>{{ notif[1] }}</p></div>
+			<div class="logo_notif" v-if="notif[0]"><p>{{ notif[0] }}</p></div>
+			<div class="logo_notif" v-if="notif[2]"><p>{{ notif[2] }}</p></div>
 		</div>
 		<router-view class="content_view" />
 		<footer id="navigation_bar">
