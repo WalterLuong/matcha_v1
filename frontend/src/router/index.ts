@@ -53,7 +53,7 @@ router.beforeEach( async (to :RouteLocationNormalized, from: RouteLocationNormal
 		if (false && to.name !== 'Login') {
 			next({ name: 'Login', query: { redirect: to.fullPath } })
 		} else {
-			console.log(from.name)
+			// console.log(from.name)
 			next();
 		}
 	})

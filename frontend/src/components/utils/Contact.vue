@@ -19,7 +19,7 @@ export default defineComponent({
 	setup( props: PorpsContact ) {
 		const contact = props.contact;
 
-		console.log( props.contact )
+		// console.log( props.contact )
 
 		return { contact };
 	},

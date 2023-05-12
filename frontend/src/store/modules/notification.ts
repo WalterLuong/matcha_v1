@@ -44,7 +44,7 @@ export default {
 			  counts[(notification.type) as ENotif]++;
 			});
 		  
-			console.log("counts: ", counts)
+			// console.log("counts: ", counts)
 			return { counts };
 		  },
 	},

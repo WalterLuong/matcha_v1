@@ -1,20 +1,15 @@
 <template>
 	<div>
-		<h1>HOME</h1>
+		<NotificationList />
 		<p>Name is store is: {{ name }}</p>
 	</div>
 </template>
 
 <script setup>
+import NotificationList from "./utils/NotificationList.vue"
 
-import { computed } from 'vue'
-import { useStore } from 'vuex'
 
-const store = useStore();
 
-const name = computed(() => {
-	return store.state.user.name;
-})
 
 
 </script>

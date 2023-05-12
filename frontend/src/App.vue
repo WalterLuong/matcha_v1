@@ -1,8 +1,7 @@
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, ref } from 'vue'
 import SettingsVue from './components/Settings.vue'
-import { INotification, NotifPack , ENotif} from "./types"
-import { useStore, mapGetters } from 'vuex'
+import { useStore } from 'vuex'
 
 
 export default defineComponent({
@@ -14,13 +13,12 @@ export default defineComponent({
 	   
 
 		const data = computed(() => store.getters.getNumberOfNotification )
-		const notif: number[] = data.value.counts;
+		const notif = ref(data.value.counts);
 
 
-		console.log( data );
+		// console.log( data );
 
-		return { notif }
-		
+		return { notif, data }
 	},
 
 })
