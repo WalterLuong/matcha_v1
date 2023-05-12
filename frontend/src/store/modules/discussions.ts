@@ -100,7 +100,7 @@ export default {
 	}),
 	getters: {
 		getDiscussionByChatId: (state: any) => (channelId: number) => {
-		return state.discussions.find((discussion: IDiscussion) => discussion.chatId == channelId);
+			return state.discussions.find((discussion: IDiscussion) => discussion.chatId == channelId);
 		}
 	},
 	mutations: {

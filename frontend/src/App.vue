@@ -1,24 +1,19 @@
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import SettingsVue from './components/Settings.vue'
 import { useStore } from 'vuex'
-
 
 export default defineComponent({
 	components: { SettingsVue },
 
 	setup() {
 		const store = useStore();
+   		const count = ref(store.getters.getNumberOfNotification.counts);
 
-	   
+ 
+		console.log(count)
+		return { count }
 
-		const data = computed(() => store.getters.getNumberOfNotification )
-		const notif = ref(data.value.counts);
-
-
-		// console.log( data );
-
-		return { notif, data }
 	},
 
 })
@@ -28,10 +23,10 @@ export default defineComponent({
 <template>
 	<div>
 		<div class="notification_container">
-			<div class="logo_notif" v-if="notif[3]"><p>{{ notif[3] }}</p></div>
-			<div class="logo_notif" v-if="notif[1]"><p>{{ notif[1] }}</p></div>
-			<div class="logo_notif" v-if="notif[0]"><p>{{ notif[0] }}</p></div>
-			<div class="logo_notif" v-if="notif[2]"><p>{{ notif[2] }}</p></div>
+			<div class="logo_notif" v-if="count[3]"><p>{{ count[3] }}</p></div>
+			<div class="logo_notif" v-if="count[0]"><p>{{ count[0] }}</p></div>
+			<div class="logo_notif" v-if="count[2]"><p>{{ count[2] }}</p></div>
+			<div class="logo_notif" v-if="count[3]"><p>{{ count[3] }}</p></div>
 		</div>
 		<router-view class="content_view" />
 		<footer id="navigation_bar">

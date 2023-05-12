@@ -1,13 +1,11 @@
 <template>
 	<div>
 		<NotificationList />
-		<p>Name is store is: {{ name }}</p>
 	</div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import NotificationList from "./utils/NotificationList.vue"
-
 
 
 

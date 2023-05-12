@@ -37,6 +37,12 @@ export default {
 	}),
 	getters: {},
 	mutations: {
+		ADD_CONTACT(state: any, new_contact: IContact) {
+			state.contact.push(new_contact);
+		},
+		DEL_CONTACT(state: any, contactId: number) {
+			state.contact.splice(contactId, 1);
+		},
 	},
 	actions: {
 	},

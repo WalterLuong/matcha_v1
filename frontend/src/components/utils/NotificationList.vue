@@ -1,9 +1,8 @@
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import { useStore } from 'vuex'
+import { defineComponent, ref } from 'vue'
+import { useStore, onMounted } from 'vuex'
 import Notification from './Notification.vue'
-import { INotification } from '../../types';
 
 export default defineComponent({
 	name: 'NotificationList',
@@ -13,14 +12,14 @@ export default defineComponent({
 	},
 
 	setup() {
-		const store = useStore();
-		const data = computed(() => {
-			return store.state.notification.notification;
-		});
-		
-		const notif_tab: INotification[] = [...data.value];
+    	const store = useStore();
 
-		console.log( 'notif_tab\n', notif_tab )
+		// initialiser notif_tab avec la valeur actuelle de store.state.notification.notification
+		const notif_tab = ref(store.state.notification.notification);
+
+		// observer les changements du state de notification
+
+		console.log('notif_tab\n', notif_tab);
 
 		return { notif_tab };
 	},

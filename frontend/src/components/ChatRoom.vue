@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useStore } from 'vuex'
-import { IDiscussion, IMessage } from '../types'
+import { IMessage } from '../types'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
