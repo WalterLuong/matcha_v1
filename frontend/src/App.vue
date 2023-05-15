@@ -1,19 +1,13 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import SettingsVue from './components/Settings.vue'
+import NotificationCounter from './components/utils/NotifCounter.vue'
 import { useStore } from 'vuex'
 
 export default defineComponent({
-	components: { SettingsVue },
+	components: { SettingsVue, NotificationCounter },
 
 	setup() {
-		const store = useStore();
-   		const count = ref(store.getters.getNumberOfNotification.counts);
-
- 
-		console.log(count)
-		return { count }
-
 	},
 
 })
@@ -22,12 +16,7 @@ export default defineComponent({
 
 <template>
 	<div>
-		<div class="notification_container">
-			<div class="logo_notif" v-if="count[3]"><p>{{ count[3] }}</p></div>
-			<div class="logo_notif" v-if="count[0]"><p>{{ count[0] }}</p></div>
-			<div class="logo_notif" v-if="count[2]"><p>{{ count[2] }}</p></div>
-			<div class="logo_notif" v-if="count[3]"><p>{{ count[3] }}</p></div>
-		</div>
+		<NotificationCounter />
 		<router-view class="content_view" />
 		<footer id="navigation_bar">
 			<router-link to="/">Home</router-link>
@@ -61,38 +50,6 @@ export default defineComponent({
 		display: flex;
 		justify-content: center;
 		align-items: center;
-	}
-
-	.notification_container {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 35px;
-		height: auto;
-		padding-top: 10px;
-		border-radius: 0 0 25px 25px;
-		background-color: red;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-around;
-		align-items: center;
-	}
-
-	.logo_notif {
-		position: relative;
-		width: 30px;
-		height: 30px;
-		border-radius: 50px;
-		margin-bottom: 5px;
-		background-color: yellow;
-	}
-
-	.logo_notif > p {
-		position: absolute;
-		top: -15px;
-		right: 2px;
-		color: rgb(75, 81, 207);
-		text-shadow: 1px 1px 1px rgb(80, 100, 199);
 	}
 
 	.content_view {

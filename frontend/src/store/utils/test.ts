@@ -5,11 +5,11 @@ import * as debug from "./generator";
 
 
 export function click_test_store() {
-	console.log("start:")
+	// console.log("start:")
 
 
-	console.log(store.state.notification.notification)
-	store.dispatch('addNotifRand');
+	// console.log(store.state.notification.notification)
+	store.dispatch('addNotifRand', ENotif.MES);
 
 	// console.log(debug.generate_discution( undefined, undefined, debug.generate_user('Coralie') ))
 
@@ -17,5 +17,5 @@ export function click_test_store() {
 
 
 
-	console.log("END\n\n")
+	// console.log("END\n\n")
 }

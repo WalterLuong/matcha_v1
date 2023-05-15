@@ -4,7 +4,6 @@ import { contactDFL, userDFL, userMe } from './data';
 import { LIST_BIO } from './data/bio';
 import { LIST_MESSAGES } from './data/messages';
 import { LIST_PRENOMS } from './data/prenoms';
-import { useStore } from 'vuex'
 
 function generate_number(limit: number) {
 	return Math.floor(Math.random() * limit);
@@ -34,7 +33,7 @@ export function generate_user( username?: string, age?: number, bio?: string ) {
 
 function notif_nextId() {
 	const notifications: INotification[] = store.state.notification.notification
-	const nextId: number = notifications[notifications.length - 1].notifId + 1;
+	const nextId: number = notifications[notifications.length - 1]?.notifId + 1 | 0;
 	console.log( " - generate next notif id:" + nextId )
 	return ( nextId as number );
 }
@@ -75,13 +74,17 @@ export function generate_contact(chatId?: number, user?: IUser, lastMessage?: st
 }
 
 export function generate_type() {
-	return generate_number( 4 );
+	const type = generate_number( 4 );
+	console.log(' - generate type: ', type)
+	return type;
 }
 
-export function generate_notif(type?: ENotif, contact?: IContact, notifId?: number) {
+export function generate_notif(type?: number, contact?: IContact, notifId?: number) {
+	console.log( " Type : ", type );
+
 	const elem: INotification = {
-		type: type ? type : generate_type(),
-		contact:  type == ENotif.VUE ? contactDFL : contact ? contact : generate_contact(),
+		type: type != undefined ? type : generate_type(),
+		contact: type == ENotif.VUE ? contactDFL : contact ? contact : generate_contact(),
 		createdAt: Date.now(),
 		notifId: notifId ? notifId : notif_nextId()
 	};

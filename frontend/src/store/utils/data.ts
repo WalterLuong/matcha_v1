@@ -20,25 +20,25 @@ export const contactDFL: IContact = {
 }
 
 export const user1: IUser = {
-	username: 'Victor',
+	username: 'USER1',
 	age: 26,
 	bio: "rammenne zelda a paris",
 };
 
 export const user2: IUser = {
-	username: 'Victor',
+	username: 'USER2',
 	age: 26,
 	bio: "rammenne zelda a paris",
 };
 
 export const user3: IUser = {
-	username: 'Hugo',
+	username: 'USER3',
 	age: 26,
 	bio: "regarde un film",
 };
 
 export const user4: IUser = {
-	username: 'Victor',
+	username: 'USER4',
 	age: 26,
 	bio: "rammenne zelda a paris",
 };

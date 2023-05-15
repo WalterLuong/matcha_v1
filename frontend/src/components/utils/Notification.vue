@@ -4,7 +4,8 @@
 import { defineComponent, PropType } from 'vue'
 import { ENotif, INotification } from '../../types'
 import { click_test_store }  from '../../store/utils/test'
-
+import store from '../../store';
+ 
 export default defineComponent({
 	name: 'Notification',
 
@@ -31,11 +32,11 @@ export default defineComponent({
 		
 		const class_color = `notif_color_${notif.type.toString()}`;
 
-
 		function handleClick() {
-			click_test_store();
+			// if (notif.type == ENotif.MES || notif.type == ENotif.NEW)
+			// 	this.$router.push(`chat/${notif.contact.chatId}`);
+			store.dispatch('delNotif', notif);
 		}
-
 
 		return { new_message, notif, class_color, handleClick }
 
@@ -82,11 +83,6 @@ export default defineComponent({
 .notif_color_3 {
 	background-color: rgba(213, 33, 33, 0.541);
 }
-
-
-
-
-
 
 .notif_photo {
 	overflow: hidden;
