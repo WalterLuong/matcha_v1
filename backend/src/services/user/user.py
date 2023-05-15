@@ -1,26 +1,40 @@
 from flask import Blueprint, request, jsonify
 from services.database import db as db
+from flask_jwt_extended import  jwt_required , create_access_token, create_refresh_token, get_jwt_identity
 
 user_att = ['id', 'password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim', 'confirmed']
 new_user_att = ['password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim', 'confirmed']
-profile = ['id', 'first_name', "details"]
+profile = ['id', 'first_name', "age","details"]
 
 connec = db.get_db()
 
 user = Blueprint('user', __name__, url_prefix='/api/v1/user')
 
 @user.get("/<int:id>")
+@jwt_required()
 def get_user_by_id(id):
     with connec:
         with connec.cursor() as cursor:
-            cursor.execute('SELECT id, first_name, details FROM user_account WHERE id = %s', (id,))
+            cursor.execute('SELECT id, first_name, age, details FROM user_account WHERE id = %s', (id,))
             existant = cursor.fetchone()
             if existant:
                 user = dict(zip(profile, existant))
                 return jsonify(user)
             return jsonify({})
 
-        
+@user.get("/me")
+@jwt_required()
+def get_me():
+    me_attributes = ['id', 'first_name', "age","bio"]
+    current_user = get_jwt_identity()
+    with connec:
+        with connec.cursor() as cursor:
+            cursor.execute('SELECT id, first_name, age, details FROM user_account WHERE id = %s', (current_user,))
+            user = cursor.fetchone()
+            if user:
+                return jsonify(dict(zip(me_attributes, user))), 200
+            return jsonify({"error": "an error has occuped"}), 400
+
 @user.get("/all")
 def get_all_users():
     with connec:

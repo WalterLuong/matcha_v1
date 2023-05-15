@@ -14,6 +14,7 @@ CREATE_USER_ACCOUNT_TABLE = (
         first_name VARCHAR(64) NOT NULL, \
         last_name VARCHAR(64) NOT NULL, \
         gender_id INT,\
+        age INT, \
         details TEXT, \
         email VARCHAR(128) UNIQUE NOT NULL, \
         confirmation_cod TEXT, \
@@ -28,11 +29,11 @@ password, \
 first_name, \
 last_name, \
 gender_id, \
+age, \
 details, \
 email, \
 confirmation_cod, \
-confirmation_tim, \
-confirmed ) \
+confirmation_tim) \
 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id"
 
 ##########################################################################
