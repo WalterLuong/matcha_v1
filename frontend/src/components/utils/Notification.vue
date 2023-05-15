@@ -3,9 +3,11 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { ENotif, INotification } from '../../types'
-import { click_test_store }  from '../../store/utils/test'
+import { DTO_delNotif } from '../../types/DTO'
 import store from '../../store';
- 
+
+
+
 export default defineComponent({
 	name: 'Notification',
 
@@ -14,6 +16,10 @@ export default defineComponent({
 			required: true,
 			type: Object as PropType<INotification>
 		},
+		index: {
+			required: true,
+			type: Number
+		}
 	},
 
 	setup( props: any) {
@@ -35,7 +41,8 @@ export default defineComponent({
 		function handleClick() {
 			// if (notif.type == ENotif.MES || notif.type == ENotif.NEW)
 			// 	this.$router.push(`chat/${notif.contact.chatId}`);
-			store.dispatch('delNotif', notif);
+			const dto: DTO_delNotif = { index: props.index, type: notif.type}
+			store.dispatch('delNotif', dto );
 		}
 
 		return { new_message, notif, class_color, handleClick }

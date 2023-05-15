@@ -54,7 +54,6 @@ export const LIST_PRENOMS: string[] = [
 	"Elliott",
 	"Layla",
 	"Daniel",
-	"Zoe",
 	"Arianna",
 	"Nathan",
 	"Hannah",

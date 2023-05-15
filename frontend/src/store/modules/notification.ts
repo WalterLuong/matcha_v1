@@ -1,5 +1,5 @@
 
-import { INotification, ENotif } from "../../types";
+import { INotification, ENotif, DTO_delNotif } from "../../types";
 import { notifDFL } from "../utils/data";
 import { generate_notif } from "../utils/generator";
 
@@ -27,27 +27,15 @@ export default {
 	mutations: {
 		ADD_NOTIFICATION(state: StoreNotification, new_notification: INotification) {
 			state.notification.push(new_notification);
-			state.counts[ new_notification.type as number ] += 1;
 		},
-		DEL_NOTIFICATION(state: StoreNotification, del_notification: INotification) {
-
-			console.log(state.notification)
-			console.log(`l'index a rechercher est: ${del_notification.notifId}`);
-
-
-			const index = state.notification.findIndex((notif: INotification) => notif.notifId !== del_notification.notifId);
-
-			console.log(`l'index trouver est: ${index}`);
-
-			if (index != -1) {
-				console.log('CA A MARCHER')
-				state.notification = state.notification.splice(index, 1);
-				state.counts[del_notification.type as number] -= 1;
+		DEL_NOTIFICATION(state: StoreNotification, index: number) {
+			if ( state.notification.length > index) {
+				// TENTATIVE DE SUPPRESSION DE MON ELEMENT:
+				state.notification.splice(index, 1);
 			}
 		},
-		DEL_ALL_NOTIFICATION(state: StoreNotification) {
+		RESET_STORE(state: StoreNotification) {
 			state.notification.splice(0, state.notification.length);
-			// je dois trouver qq d'autre pour reset mais garder la reactivite des mon comp
 			state.counts[0] = 0;
 			state.counts[1] = 0;
 			state.counts[2] = 0;
@@ -56,6 +44,15 @@ export default {
 		DEL_TYPE_NOTIFICATION(state: StoreNotification, type_notification: ENotif) {
 			state.notification = state.notification.filter((notif: INotification) => notif.type !== type_notification);
 			state.counts[ type_notification as number ] = 0;
+		},
+		INC_COUNT(state: StoreNotification, type: ENotif | number) {
+			state.counts[ type ] += 1;
+		},
+		DEC_COUNT(state: StoreNotification, type: ENotif | number) {
+			state.counts[ type ] -= 1;
+		},
+		RESET_COUNT(state: StoreNotification, type: ENotif | number ) {
+			state.counts[ type ] = 0;
 		}
 	},
 	actions: {
@@ -63,33 +60,38 @@ export default {
 		addNotif({ commit }: any, elem: INotification) {
 			console.log("Ajout d'une notification:");
 			commit('ADD_NOTIFICATION', elem);
+			commit('INC_COUNT', elem.type);
 		},
 
 		// ------------- DESTRUCTOR ------------- //
-		delNotif({ commit }: any, elem: INotification) {
-			console.log('Deletion de la notification ID:', elem);
-			commit('DEL_NOTIFICATION', elem);
+		delNotif({ commit }: any, data: DTO_delNotif ) {
+			console.log('Deletion de la notification: ', data.index, ' de type ', WR_ENOTIF(data.type));
+			commit('DEL_NOTIFICATION', data.index);
+			commit('DEC_COUNT', data.type);
 		},
 		delNotifs({ commit }:any ) {
 			console.log('Deletion de toutes les notifications:');
-			commit('DEL_ALL_NOTIFICATION');
+			commit('RESET_STORE');
 		},
 		delNotifType({ commit }: any, elem: ENotif) {
 			console.log('Deletion de toutes les notifications TYPE:');
 			commit('DEL_TYPE_NOTIFICATION', elem);
+			commit('RESET_COUNT', elem);
 		},
 
 		// ------------- DEBUG ------------- //
-		addNotifRand({ commit }: any) {
-			let new_notif: INotification = generate_notif();
-			console.log('DEBUG: ajout d\'une random notification: TYPE: ' + WR_ENOTIF(new_notif.type));
-			commit('ADD_NOTIFICATION', new_notif);
-		},
+		// addNotifRand({ commit }: any) {
+		// 	let new_notif: INotification = generate_notif();
+		// 	console.log('DEBUG: ajout d\'une random notification: TYPE: ' + WR_ENOTIF(new_notif.type));
+		// 	commit('ADD_NOTIFICATION', new_notif);
+		// 	commit('INC_COUNT', elem);
+		// },
 
 		addNotifType({ commit }: any, elem?: ENotif) {
 			console.log('DEBUG: ajout d\'une notification: TYPE: ' + WR_ENOTIF(elem));
 			let new_notif: INotification = generate_notif( elem );
 			commit('ADD_NOTIFICATION', new_notif);
+			commit('INC_COUNT', elem);
 		}
 
 	},

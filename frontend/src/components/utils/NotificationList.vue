@@ -1,6 +1,6 @@
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import { INotification } from '../../types';
 import Notification from './Notification.vue'
@@ -13,7 +13,7 @@ export default defineComponent({
 	},
 	setup() {
     	const store = useStore();
-		let notif_tab = ref(store.state.notification.notification);
+		let notif_tab = reactive<INotification[]>(store.state.notification.notification);
 		return { notif_tab };
 	},
 	// async mounted() {
@@ -36,7 +36,7 @@ export default defineComponent({
 
 <template>
 	<div id="notif_list_content">
-		<Notification v-for="(notif, index) in notif_tab" :key="index" :notification="notif" />
+		<Notification v-for="(notif, index) in notif_tab" :key="index" :notification="notif" :index='index' />
 	</div>
 </template>
 

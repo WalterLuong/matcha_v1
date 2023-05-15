@@ -24,14 +24,14 @@ export default {
   <div>
 	<div class="notif_btn_container">
 		<div id="notif_up_btn">
-			<button @click="addNotif(0)">0</button>
-			<button @click="addNotif(1)">1</button>
-			<button @click="addNotif(2)">2</button>
-			<button @click="addNotif(3)">3</button>
+			<button @click="() => addNotif(0)">MATCH</button>
+			<button @click="() => addNotif(1)">VUE</button>
+			<button @click="() => addNotif(2)">MES</button>
+			<button @click="() => addNotif(3)">DEL</button>
 		</div>
 		<div id="notif_down_btn">
-			<button @click="clearALL()">DEL</button>
-			<button @click="addNotif()">NEW</button>
+			<button @click="() => clearALL()">RESET</button>
+			<!-- <button @click="addNotif()">NEW</button> -->
 		</div>
 	</div>
   </div>

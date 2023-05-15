@@ -19,12 +19,6 @@ export default {
 	setup() {
 		const store = useStore();
 		const count = ref(store.state.notification.counts);
-		
-		
-		
-		console.log('NOTIFICATION COUNT' , count.value)
-
-
 		return { count }
 	}
 
@@ -66,25 +60,25 @@ export default {
 		text-shadow: 1px 1px 1px rgb(80, 100, 199);
 	}
 
-/* NEW */
-.notif_color_0 {
-	background-color: rgba(69, 225, 69, 0.541);
-}
+	/* NEW */
+	.notif_color_0 {
+		background-color: rgba(69, 225, 69, 0.541);
+	}
 
-/* VUE */
-.notif_color_1 {
-	background-color: rgba(255, 247, 24, 0.622);
-}
+	/* VUE */
+	.notif_color_1 {
+		background-color: rgba(255, 247, 24, 0.622);
+	}
 
-/* MES */
-.notif_color_2 {
-	background-color: rgba(46, 174, 229, 0.541);
-}
+	/* MES */
+	.notif_color_2 {
+		background-color: rgba(46, 174, 229, 0.541);
+	}
 
-/* DEL */
-.notif_color_3 {
-	background-color: rgba(213, 33, 33, 0.541);
-}
+	/* DEL */
+	.notif_color_3 {
+		background-color: rgba(213, 33, 33, 0.541);
+	}
 
 
 </style>
