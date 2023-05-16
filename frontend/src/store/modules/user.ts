@@ -1,9 +1,18 @@
-export default {
+import Module from "vuex";
+import { RootState } from "..";
+
+export interface UserState {
+	id: number,
+	name: string,
+}
+
+export const UserModule: Module<UserState, RootState> = {
 	state: () => ({
 		name: 'Maxime53',
-
 	}),
-	getters: {},
+	getters: {
+		
+	},
 	mutations: {
 		SET_NAME(state: any, payload: string) {
 			state.name = payload;
@@ -11,7 +20,9 @@ export default {
 	},
 	actions: {
 		saveName({ commit }: any, data: any ) {
-			commit('SET_NAME', data);
+			commit( UserModule.mutations.SET_NAME , data);
 		}
 	},
 }
+
+export default UserModule;

@@ -1,8 +1,7 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
 import SettingsVue from './components/Settings.vue'
 import NotificationCounter from './components/utils/NotifCounter.vue'
-import { useStore } from 'vuex'
 
 export default defineComponent({
 	components: { SettingsVue, NotificationCounter },

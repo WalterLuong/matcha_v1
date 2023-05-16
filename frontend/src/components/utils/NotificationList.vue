@@ -1,10 +1,11 @@
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
-import { useStore } from 'vuex'
-import { INotification } from '../../types';
+import { ComputedRef, computed, defineComponent, reactive, watch} from 'vue'
 import Notification from './Notification.vue'
+import { useStore } from 'vuex'
+import { ENotif, INotification } from '../../types';
 // import { createClient } from 'redis'
+
 
 export default defineComponent({
 	name: 'NotificationList',
@@ -12,38 +13,53 @@ export default defineComponent({
 		Notification,
 	},
 	setup() {
-    	const store = useStore();
-		let notif_tab = reactive<INotification[]>(store.state.notification.notification);
-		return { notif_tab };
+		const store = useStore();
+		const notif_tab = reactive(store.getters.getAllNotification);
+
+		console.log(notif_tab)
+
+
+		const VueNotif: ComputedRef<INotification[]> = computed(() => {
+			return notif_tab.filter(( notif: INotification ) => notif.type == ENotif.VUE);
+		})
+
+		const OtherNotif: ComputedRef<INotification[]> = computed(() => {
+			return notif_tab.filter(( notif: INotification ) => notif.type != ENotif.VUE)
+		})
+
+
+		watch(notif_tab, () => {
+			console.log("change")
+			VueNotif
+			OtherNotif 
+		})
+
+
+		function handleClick() {
+			console.log('STR: ', notif_tab);
+			// console.log('VUE: ', VueNotif.value);
+			// console.log('OTH: ', OtherNotif.value);
+		}
+
+		return { VueNotif, OtherNotif, handleClick };
 	},
-	// async mounted() {
-	// 	const url = 'redis://localhost:6378';
-	// 	const redisClient = createClient({ url });
-	// 	if ( !redisClient ) {
-	// 		await redisClient.connect();
-	// 		await redisClient.set('key', 'value');
-	// 		const value = await redisClient.get('key');
-	// 		console.log("In class");
-	// 		console.log(value);
-	// 		await redisClient.quit();
-	// 	}
-	// },
 })
 
-//
 
 </script>
 
+
 <template>
 	<div id="notif_list_content">
-		<Notification v-for="(notif, index) in notif_tab" :key="index" :notification="notif" :index='index' />
+		<button @click="handleClick">CLIC</button>
+		<Notification v-for="(notifA, idxA) in VueNotif" :key="idxA" :notification="notifA" :index="idxA" />
+		<Notification v-for="(notifB, idxB) in OtherNotif" :key="idxB" :notification="notifB" :index="idxB" />
 	</div>
 </template>
-
 
 <style>
 #notif_list_content {
 	display: flex;
-	flex-direction: column-reverse;
+	flex-direction: column;
 }
 </style>

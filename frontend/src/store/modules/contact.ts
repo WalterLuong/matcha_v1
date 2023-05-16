@@ -1,49 +1,48 @@
-import { IContact, EStatus, IUser } from "../../types"
+import { Module } from "vuex";
+import { IContact } from "../../types"
+import { RootState } from "..";
+import { contactsDFL } from "../utils/data";
 
-const user2: IUser = {
-	username: 'Walter',
-	age: 26,
-	bio: "attend que maxime code",
+export interface ContactState {
+	list: IContact[],
 }
 
-const user3: IUser = {
-	username: 'Hugo',
-	age: 26,
-	bio: "regarde un film",
-}
-
-const user4: IUser = {
-	username: 'Victor',
-	age: 26,
-	bio: "rammenne zelda a paris",
-}
-
-
-const contactDFL: IContact[] =  [
-	{ chatId: 1, user: user2, lastMessage: "coucou ca va ?", status: EStatus.OFF },
-	{ chatId: 2, user: user3, lastMessage: "cawd awygduyaw  ?", status: EStatus.OFF },
-	{ chatId: 3, user: user4, lastMessage: "coucou ca awdawdawdava ?", status: EStatus.OFF },
-	{ chatId: 4, user: user2, lastMessage: "awdawawdawdaw ca va ?", status: EStatus.OFF },
-	{ chatId: 5, user: user3, lastMessage: "coucou ca va ?", status: EStatus.OFF },
-	{ chatId: 6, user: user4, lastMessage: "cawd awygduyaw  ?", status: EStatus.OFF },
-	{ chatId: 7, user: user2, lastMessage: "coucou ca awdawdawdava ?", status: EStatus.OFF },
-	{ chatId: 8, user: user3, lastMessage: "awdawawdawdaw ca va ?", status: EStatus.OFF },
-	{ chatId: 9, user: user4, lastMessage: "coucou ca va ?", status: EStatus.OFF },
-];
-
-export default {
+export const ContactModule: Module<ContactState, RootState> = {
 	state: () => ({
-		contact: contactDFL as IContact[],
+		list: contactsDFL,
 	}),
-	getters: {},
-	mutations: {
-		ADD_CONTACT(state: any, new_contact: IContact) {
-			state.contact.push(new_contact);
+	getters: {
+		// Getter pour obtenir tous les contacts
+		getAllContacts: (state: ContactState) => {
+			return state.list;
 		},
-		DEL_CONTACT(state: any, contactId: number) {
-			state.contact.splice(contactId, 1);
+		// Getter pour obtenir un contact en fonction de l'ID
+		getContactById: (state: ContactState) => (id: number) => {
+			return state.list.find((contact) => contact.user.id === id);
+		},
+	},
+	mutations: {
+		ADD_CONTACT(state: ContactState, new_contact: IContact) {
+			state.list.push(new_contact);
+		},
+		DEL_CONTACT(state: ContactState, contactId: number) {
+			state.list.splice(contactId, 1);
 		},
 	},
 	actions: {
+		addContact({ commit }: any, new_contact: IContact) {
+			console.log(" - Push New Contact in a store");
+			commit('ADD_CONTACT', new_contact);
+		},
+		delContactById({ commit, state }: any, del_contact_index: number) {
+			if ( state.list.length > del_contact_index ) {
+				console.log(" - Push New Contact in a store");
+				commit('ADD_CONTACT', del_contact_index);
+			} else {
+				console.log(" - ERROR: delContactById: index outside of list");
+			}
+		}
 	},
 }
+
+export default ContactModule;

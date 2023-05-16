@@ -1,17 +1,18 @@
-import { createStore } from 'vuex'
+import { createStore, Store } from 'vuex'
+import { UserModule, UserState } from './modules/user'
+import { ContactModule, ContactState } from './modules/contact'
+import { NotificationModule, NotificationState } from './modules/notification'
 
-import user from './modules/user'
-import contact from './modules/contact'
-import discussions from './modules/discussions'
-import notification from './modules/notification'
+export interface RootState {
+	user: UserState;
+	contact: ContactState;
+	notification: NotificationState;
+}
 
-const store = createStore({
+export const store: Store<RootState> = createStore<RootState>({
 	modules: {
-		user,
-		contact,
-		discussions,
-		notification,
+		user: UserModule,
+		contact: ContactModule,
+		notification: NotificationModule,
 	}
 })
-
-export default store

@@ -1,11 +1,9 @@
 
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, ref } from 'vue'
 import { ENotif, INotification } from '../../types'
-import { DTO_delNotif } from '../../types/DTO'
-import store from '../../store';
-
+import { useStore } from 'vuex';
 
 
 export default defineComponent({
@@ -23,8 +21,10 @@ export default defineComponent({
 	},
 
 	setup( props: any) {
-
+		const store = useStore()
 		const notif: INotification = props.notification;
+		let active = ref(true);
+
 
 		let new_message: string = ( notif.type == ENotif.MES && notif.contact) ? notif.contact.lastMessage
 			: ( notif.type == ENotif.DEL ) ? "Malheureusement ca na pas marché! "
@@ -38,14 +38,13 @@ export default defineComponent({
 		
 		const class_color = `notif_color_${notif.type.toString()}`;
 
-		function handleClick() {
+		async function handleClick() {
 			// if (notif.type == ENotif.MES || notif.type == ENotif.NEW)
 			// 	this.$router.push(`chat/${notif.contact.chatId}`);
-			const dto: DTO_delNotif = { index: props.index, type: notif.type}
-			store.dispatch('delNotif', dto );
+			store.commit('DEL_NOTIFICATION', notif );
+			active.value = !active.value;
 		}
-
-		return { new_message, notif, class_color, handleClick }
+		return { new_message, notif, class_color, handleClick, active }
 
 	}
 });
@@ -53,9 +52,9 @@ export default defineComponent({
 </script>
 
 <template>
-	<div >
+	<div>
 		<router-link to="">
-			<div @click="handleClick" id="notif_content" :class="class_color">
+			<div @click="handleClick()" id="notif_content" :class="class_color">
 				<div class="notif_photo"   >
 					<img src="" alt="">
 				</div>

@@ -1,20 +1,26 @@
 
-<script>
-import store from '../../store';
-
-function addNotif( type ) {
-	store.dispatch('addNotifType', type);
-}
-
-function clearALL() {
-	store.dispatch('delNotifs');
-}
-
+<script lang="ts">
+import { ENotif } from '../../types';
+import { useStore } from 'vuex'
 
 export default {
 	name: 'NotificationHandler',
 	setup() {
-		return { addNotif, clearALL }
+		const store = useStore();
+
+		function addNotif( type: ENotif ) {
+			store.dispatch('addNotifType', type);
+		}
+
+		function clearALL() {
+			store.dispatch('delNotifs');
+		}
+
+		function delType( type: ENotif | number ) {
+			store.dispatch('delNotifType', type);
+		}
+
+		return { addNotif, clearALL, delType }
 	}
 
 }
@@ -31,7 +37,7 @@ export default {
 		</div>
 		<div id="notif_down_btn">
 			<button @click="() => clearALL()">RESET</button>
-			<!-- <button @click="addNotif()">NEW</button> -->
+			<button @click="() => delType(1)">DEL VUES</button>
 		</div>
 	</div>
   </div>

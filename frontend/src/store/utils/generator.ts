@@ -1,6 +1,7 @@
-import store from '..';
-import { ENotif, EStatus, IContact, IDiscussion, IMessage, INotification, IUser } from '../../types'
-import { contactDFL, userDFL, userMe } from './data';
+
+import { store } from '..';
+import { ENotif, EStatus, IContact, INotification, IUser } from '../../types'
+import { contactDFL, } from './data';
 import { LIST_BIO } from './data/bio';
 import { LIST_MESSAGES } from './data/messages';
 import { LIST_PRENOMS } from './data/prenoms';
@@ -25,21 +26,21 @@ export function generate_user( username?: string, age?: number, bio?: string ) {
 	const elem: IUser = {
 		username: username ? username : generate_name(),
 		age: age ? age : generate_age(18, 49),
-		bio: bio ? bio : generate_bio()
+		bio: bio ? bio : generate_bio(),
+		id: 0,
 	};
-
 	return elem;
 }
 
 function notif_nextId() {
-	const notifications: INotification[] = store.state.notification.notification
+	const notifications: INotification[] = store.getters.getAllNotification;
 	const nextId: number = notifications[notifications.length - 1]?.notifId + 1 | 0;
 	console.log( " - generate next notif id:" + nextId )
 	return ( nextId as number );
 }
 
 function contact_nextId() {
-	const contact: IContact[] = store.state.contact.contact;
+	const contact: IContact[] = store.getters.getAllContacts;
 	const nextId: number = contact[contact.length - 1]?.chatId + 1 | 1;
 	console.log( " - generate next contact id:" + nextId )
 	return ( nextId as number );
@@ -91,32 +92,3 @@ export function generate_notif(type?: number, contact?: IContact, notifId?: numb
 	return elem;
 }
 
-function discussion_nextId() {
-	const discussion: IDiscussion[] = store.state.discussions.discussions;
-	const nextId: number = discussion[discussion.length - 1].chatId + 1;
-	console.log( " - generate next discussion id:" + nextId )
-	return ( nextId as number );
-}
-
-function generate_conversation( user?: IUser ) {
-	let messages: IMessage[] = [];
-
-	for ( let i = 0; i < generate_number(30); i++) {
-		messages.push( {
-			user: ( i % 2 ) ? ( userMe ) : ( user ? user : userDFL ),
-			message: generate_message(ENotif.MES),
-			createdAt: Date.now(),
-		} );
-	}
-
-	return messages;
-}
-
-export function generate_discution( chatId?: number, discussion?: IMessage[], user?: IUser ) {
-	const elem: IDiscussion = {
-		chatId: chatId ? chatId : discussion_nextId(),
-		discussion: discussion ? discussion : generate_conversation( user )
-	}
-
-	return elem;
-}
