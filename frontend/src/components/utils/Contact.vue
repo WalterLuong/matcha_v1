@@ -28,7 +28,7 @@ export default defineComponent({
 
 <template>
 	<div class="contact_container">
-		<router-link class="contact_preview" :to="`/chat/${contact.chatId}`">
+		<!-- <router-link class="contact_preview" :to="`/chat/${contact.chatId}`"> -->
 			<div>
 				<img src="" alt="">
 				<p> {{ contact.user.username }} </p>
@@ -36,7 +36,7 @@ export default defineComponent({
 			<div>
 				<p>{{ contact.lastMessage }}</p>
 			</div>
-		</router-link>
+		<!-- </router-link> -->
 	</div>
 </template>
 

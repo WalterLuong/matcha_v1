@@ -1,8 +1,6 @@
 
-import { IUser } from ".";
-
 export type IMessage = {
-	user: IUser;
+	userId: number;
 	message: string;
     createdAt: number;
 }

@@ -41,7 +41,7 @@ export default defineComponent({
 		async function handleClick() {
 			// if (notif.type == ENotif.MES || notif.type == ENotif.NEW)
 			// 	this.$router.push(`chat/${notif.contact.chatId}`);
-			store.commit('DEL_NOTIFICATION', notif );
+			store.dispatch('delNotif', notif );
 			active.value = !active.value;
 		}
 		return { new_message, notif, class_color, handleClick, active }

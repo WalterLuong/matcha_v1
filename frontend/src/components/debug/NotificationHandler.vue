@@ -37,7 +37,7 @@ export default {
 		</div>
 		<div id="notif_down_btn">
 			<button @click="() => clearALL()">RESET</button>
-			<button @click="() => delType(1)">DEL VUES</button>
+			<button @click="delType(1)">DEL VUES</button>
 		</div>
 	</div>
   </div>

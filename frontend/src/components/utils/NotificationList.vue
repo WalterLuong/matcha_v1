@@ -14,25 +14,26 @@ export default defineComponent({
 	},
 	setup() {
 		const store = useStore();
-		const notif_tab = reactive(store.getters.getAllNotification);
+		const notif_tab = computed(() => [...store.getters.getAllNotification]);
 
-		console.log(notif_tab)
+		console.log(notif_tab.value)
+
 
 
 		const VueNotif: ComputedRef<INotification[]> = computed(() => {
-			return notif_tab.filter(( notif: INotification ) => notif.type == ENotif.VUE);
+			return notif_tab.value.filter(( notif: INotification ) => notif.type == ENotif.VUE);
 		})
 
 		const OtherNotif: ComputedRef<INotification[]> = computed(() => {
-			return notif_tab.filter(( notif: INotification ) => notif.type != ENotif.VUE)
+			return notif_tab.value.filter(( notif: INotification ) => notif.type != ENotif.VUE)
 		})
 
 
-		watch(notif_tab, () => {
-			console.log("change")
-			VueNotif
-			OtherNotif 
-		})
+		// watch(notif_tab, () => {
+		// 	console.log("change")
+		// 	VueNotif
+		// 	OtherNotif 
+		// })
 
 
 		function handleClick() {
@@ -52,8 +53,8 @@ export default defineComponent({
 <template>
 	<div id="notif_list_content">
 		<button @click="handleClick">CLIC</button>
-		<Notification v-for="(notifA, idxA) in VueNotif" :key="idxA" :notification="notifA" :index="idxA" />
-		<Notification v-for="(notifB, idxB) in OtherNotif" :key="idxB" :notification="notifB" :index="idxB" />
+		<Notification v-for="(notifA, idxA) in VueNotif" :key="notifA.notifId" :notification="notifA" :index="idxA" />
+		<Notification v-for="(notifB, idxB) in OtherNotif" :key="notifB.notifId" :notification="notifB" :index="idxB" />
 	</div>
 </template>
 

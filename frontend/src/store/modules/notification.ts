@@ -46,9 +46,9 @@ export const NotificationModule: Module<NotificationState, RootState> = {
 			state.counts[3] = 0;
 		},
 		DEL_TYPE_NOTIFICATION: (state: NotificationState, type_notification: ENotif) => {
-			const rest = state.notification.filter((notif: INotification) => notif.type !== type_notification);
-			console.log( rest )
-			state.notification = rest
+			const ret = state.notification.filter((notif: INotification) => notif.type != type_notification);
+			console.log(ret);
+			state.notification = ret;
 		},
 		INC_COUNT: (state: NotificationState, type: ENotif | number) => {
 			state.counts[ type ] += 1;
@@ -79,7 +79,7 @@ export const NotificationModule: Module<NotificationState, RootState> = {
 			commit('RESET_STORE');
 		},
 		delNotifType: ({ commit }: any, elem: ENotif) => {
-			console.log('Deletion de toutes les notifications TYPE:');
+			console.log('Deletion de toutes les notifications TYPE:', WR_ENOTIF(elem));
 			commit('DEL_TYPE_NOTIFICATION', elem);
 			commit('RESET_COUNT', elem);
 		},
@@ -95,6 +95,7 @@ export const NotificationModule: Module<NotificationState, RootState> = {
 		addNotifType({ commit }: any, elem?: ENotif) {
 			console.log('DEBUG: ajout d\'une notification: TYPE: ' + WR_ENOTIF(elem));
 			let new_notif: INotification = generate_notif( elem );
+			console.log(new_notif);
 			commit('ADD_NOTIFICATION', new_notif);
 			commit('INC_COUNT', elem);
 		}

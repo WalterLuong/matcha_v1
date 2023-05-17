@@ -1,7 +1,6 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
 import { useStore } from 'vuex';
-import { IContact } from '../../types';
 import Contact from './Contact.vue'
 
 export default defineComponent({
@@ -11,22 +10,39 @@ export default defineComponent({
 		Contact,
 	},
 
+
+
 	setup() {
 		const store = useStore();
-    	const contactList = computed(() =>  store.state.contact.contact );
+    	const contactList = computed(() => [...store.getters.getAllContacts]);
 		// console.log( store.state.contact.contact );
-		return { contactList };
+
+
+		function addContact() {
+			store.dispatch('addRandomContact');
+		}
+		function remContact( id: number) {
+			store.dispatch('delContactByIdx', id);
+		}
+		function print() {
+			console.log(contactList.value);
+		}
+
+		return { contactList, addContact, remContact, print };
 	},
 })
 </script>
 
+
+
 <template>
 	<div class="contact_list_container">
 		<div id="contact_list" >
-			<Contact v-for="(contact, index) in contactList" :key="index" :contact="contact"  />
+			<Contact @click="remContact(contact.chatId)" v-for="(contact) in contactList" :key="contact.chatId" :contact="contact"  />
 		</div>
 		<div id="contact_search">
-			<p>coucou</p>
+			<button @click="addContact()">ADD</button>
+			<button @click="print()">SHOW</button>
 		</div>
 	</div>
 </template>
