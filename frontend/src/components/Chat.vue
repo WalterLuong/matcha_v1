@@ -1,15 +1,21 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import ContactList from './utils/ContactList.vue'
 
 export default defineComponent({
+
+	components: { ContactList },
+
 	setup() {
-		
+		return {}
 	},
 })
 </script>
 
 <template>
-	<div></div>
+	<div>
+		<ContactList />
+	</div>
 </template>
 
 <style>

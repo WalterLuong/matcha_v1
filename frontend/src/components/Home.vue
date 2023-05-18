@@ -1,41 +1,25 @@
 <template>
 	<div>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<h1>HOME</h1>
-		<p>Name is store is: {{ name }}</p>
+		<NotificationHandler />
+		<NotificationList />
 	</div>
 </template>
 
-<script setup>
+<script lang="ts">
+import NotificationList from "./utils/NotificationList.vue"
+import NotificationHandler from './debug/NotificationHandler.vue'
 
-import { computed } from 'vue'
-import { useStore } from 'vuex'
+export default {
+	name: 'Home',
+	components: {
+		NotificationList,
+		NotificationHandler,
+	},
+	setup() {
+		return {}
+	}
+}
 
-const store = useStore();
-
-const name = computed(() => {
-	return store.state.user.name;
-})
 
 
 </script>
