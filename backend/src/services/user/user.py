@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from services.database import db as db
 from flask_jwt_extended import  jwt_required , create_access_token, create_refresh_token, get_jwt_identity
+from constants import http_status_code as CODE
 
 user_att = ['id', 'password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim', 'confirmed']
 new_user_att = ['password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim', 'confirmed']
@@ -20,7 +21,7 @@ def get_user_by_id(id):
             if existant:
                 user = dict(zip(profile, existant))
                 return jsonify(user)
-            return jsonify({})
+            return jsonify({}), CODE.HTTP_404_NOT_FOUND
 
 @user.get("/me")
 @jwt_required()
@@ -32,8 +33,8 @@ def get_me():
             cursor.execute('SELECT id, first_name, age, details FROM user_account WHERE id = %s', (current_user,))
             user = cursor.fetchone()
             if user:
-                return jsonify(dict(zip(me_attributes, user))), 200
-            return jsonify({"error": "an error has occuped"}), 400
+                return jsonify(dict(zip(me_attributes, user))), CODE.HTTP_200_OK
+            return jsonify({"error": "an error has occuped"}), CODE.HTTP_401_UNAUTHORIZED
 
 @user.get("/all")
 def get_all_users():
