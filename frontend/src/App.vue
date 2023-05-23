@@ -3,26 +3,31 @@ import { defineComponent } from 'vue'
 import SettingsVue from './components/Settings.vue'
 import NotificationCounter from './components/utils/NotifCounter.vue'
 
+function isOnLoginPage() {
+	return window.location.pathname !== '/login';
+}
+
 export default defineComponent({
 	components: { SettingsVue, NotificationCounter },
 
 	setup() {
-	},
 
+
+		return { isOnLoginPage }
+	},
 })
 </script>
 
-
 <template>
 	<div>
-		<NotificationCounter />
+		<NotificationCounter v-if="isOnLoginPage()" />
 		<router-view class="content_view" />
-		<footer id="navigation_bar">
+		<footer id="navigation_bar"  v-if="isOnLoginPage()">
 			<router-link to="/">Home</router-link>
 			<router-link to="/chat">Chat</router-link>
 			<router-link to="/match">Match</router-link>
 		</footer>
-		<SettingsVue />
+		<SettingsVue v-if="isOnLoginPage()"/>
 	</div>
 </template>
 
