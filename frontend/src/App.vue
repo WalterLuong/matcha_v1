@@ -14,15 +14,15 @@ export default defineComponent({
 
 
 <template>
-	<div>
-		<NotificationCounter />
+	<div class=" bg-stone-400 ">
+		<!-- <NotificationCounter /> -->
 		<router-view class="content_view" />
-		<footer id="navigation_bar">
+		<!-- <footer id="navigation_bar">
 			<router-link to="/">Home</router-link>
 			<router-link to="/chat">Chat</router-link>
 			<router-link to="/match">Match</router-link>
-		</footer>
-		<SettingsVue />
+		</footer> -->
+		<!-- <SettingsVue /> -->
 	</div>
 </template>
 
@@ -60,7 +60,6 @@ export default defineComponent({
 		height: calc(100vh - 63px);
 		width: calc(100vw - 28px);
 
-		background-color: blueviolet;
 	}
 
 </style>
