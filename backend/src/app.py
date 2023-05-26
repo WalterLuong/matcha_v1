@@ -13,6 +13,8 @@ import services.database.db as db
 from services.auth import auth as auth
 from services.user import user as user
 
+from flask_cors import CORS
+
 app = Flask(__name__)
 
 load_dotenv()
@@ -26,6 +28,8 @@ app.config.from_mapping(
         'uiversion':3
     },
 )
+
+CORS(app)
 
 connec = db.get_db()
 db.init_db(connec)

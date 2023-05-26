@@ -44,7 +44,7 @@ export default defineComponent({
 
 		const submitForm = async () => {
 
-			const url = 'http://localhost:5433/api/v1/auth/login';
+			const url = 'http://127.0.0.1:5000/api/v1/auth/register';
 			const options = {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
