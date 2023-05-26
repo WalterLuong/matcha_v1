@@ -14,7 +14,7 @@ export default defineComponent({
 
 
 <template>
-	<div class=" bg-stone-400 ">
+	<div>
 		<!-- <NotificationCounter /> -->
 		<router-view class="content_view" />
 		<!-- <footer id="navigation_bar">
@@ -55,7 +55,7 @@ export default defineComponent({
 		display: flex;
 		align-items: center;
 		flex-direction: column;
-		overflow-y: scroll;
+		overflow-y: hidden;
 
 		height: calc(100vh - 63px);
 		width: calc(100vw - 28px);
