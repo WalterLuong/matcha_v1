@@ -30,7 +30,7 @@ export default defineComponent({
 
 		const submitForm = () => {
 
-			const url = 'http://127.0.0.1:5000/api/v1/auth/login';
+			const url = import.meta.env.VITE_API + 'auth/login';
 			const options = {
 				method: 'POST',
 				headers: { 

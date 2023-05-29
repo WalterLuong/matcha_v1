@@ -29,7 +29,7 @@ app.config.from_mapping(
     },
 )
 
-CORS(app)
+cors = CORS(app, support_credentials=True)
 
 connec = db.get_db()
 db.init_db(connec)

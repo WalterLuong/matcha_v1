@@ -8,7 +8,6 @@ from services.database import db as db
 from constants import http_status_code as CODE
 from services.validators.validators import is_email, is_name, is_strong_password
 
-
 auth = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
 user_att = ['id', 'password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim']
 new_user_att = ['password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim']
@@ -29,10 +28,10 @@ def mandatory_attributes(form):
             return False
     return True
 
-@auth.post('/register')
+@auth.route('/register', methods=['POST'])
 @swag_from('../../docs/auth/register.yml')
 def register():
-    form = request.form
+    form = request.get.json()
     code = CODE.HTTP_400_BAD_REQUEST
     if request.method == 'POST' and mandatory_attributes(form):
         User = dict(zip(new_user_att, ['' for i in range(len(new_user_att))]))
