@@ -29,7 +29,7 @@ app.config.from_mapping(
     },
 )
 
-cors = CORS(app, support_credentials=True)
+cors = CORS(app, resources={r'*': {'origins': 'http://localhost:3000'}})
 
 connec = db.get_db()
 db.init_db(connec)

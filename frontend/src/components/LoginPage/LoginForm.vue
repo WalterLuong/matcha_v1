@@ -31,11 +31,10 @@ export default defineComponent({
 		const submitForm = () => {
 
 			const url = import.meta.env.VITE_API + 'auth/login';
+
 			const options = {
 				method: 'POST',
-				headers: { 
-					'Content-Type': 'application/json',
-				},
+				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(form)
 			};
 

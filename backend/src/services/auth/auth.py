@@ -3,10 +3,14 @@ from flask import Blueprint, request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_jwt_extended import  jwt_required , create_access_token, create_refresh_token, get_jwt_identity
 from flasgger import swag_from
+from flask_cors import CORS, cross_origin
+
 
 from services.database import db as db
 from constants import http_status_code as CODE
 from services.validators.validators import is_email, is_name, is_strong_password
+
+
 
 auth = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
 user_att = ['id', 'password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim']
@@ -28,10 +32,11 @@ def mandatory_attributes(form):
             return False
     return True
 
-@auth.route('/register', methods=['POST'])
+@auth.post('/register')
+# @cross_origin(origin='*')
 @swag_from('../../docs/auth/register.yml')
 def register():
-    form = request.get.json()
+    form = request.get_json()
     code = CODE.HTTP_400_BAD_REQUEST
     if request.method == 'POST' and mandatory_attributes(form):
         User = dict(zip(new_user_att, ['' for i in range(len(new_user_att))]))
@@ -56,11 +61,11 @@ def register():
                     User['password'] = generate_password_hash(User['password'])
                     cursor.execute(db.INSERT_USER_RETURN_ID, tuple(User.values()))
                     user_id = cursor.fetchone()[0]
-                    message = f"You have successfully registered !\n id: {user_id}"
+                    message = f"You have successfully registered ! id: {user_id}"
                     code = CODE.HTTP_201_CREATED
     elif request.method == 'POST':
         message = 'Please fill out the form !'
-    return message, code
+    return jsonify({"message":message}), CODE.HTTP_400_BAD_REQUEST
 
 @auth.post('/login')
 @swag_from('../../docs/auth/login.yml')
