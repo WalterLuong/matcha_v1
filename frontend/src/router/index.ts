@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, NavigationGuardNext, RouteConfig, RouteLocationNormalized } from 'vue-router'
+import { createRouter, createWebHistory, NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 
 import HomeView from '../components/Home.vue'
 import ChatView from '../components/Chat.vue'
@@ -7,7 +7,7 @@ import MatchView from '../components/Match.vue'
 import LoginView from '../components/LoginPage/Login.vue'
 import MatchMenu from '../components/MatchMenu.vue'
 
-const routes: Array<RouteConfig> = [
+const routes = [
 	{
 		path: '/',
 		name: 'Home',
@@ -50,12 +50,14 @@ const router = createRouter({
 
 router.beforeEach( async (to :RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
 		// Placer la fonction d'autentification a la place du false
-		if (false && to.name !== 'Login') {
+		if (true && to.name !== 'Login') {
 			next({ name: 'Login', query: { redirect: to.fullPath } })
 		} else {
 			// console.log(from.name)
 			next();
 		}
-	})
+})
+
+
 
 export default router;

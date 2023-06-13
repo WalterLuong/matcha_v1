@@ -39,6 +39,9 @@ enter-db:
 enter-front:
 	docker exec -it matcha_frontend sh
 
+show-remote:
+	ifconfig -a | grep 192
+
 info:
 	@echo "\033[1;33mall:\033[m"
 	@echo "	docker-compose up --build -d"

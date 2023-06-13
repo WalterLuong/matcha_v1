@@ -6,8 +6,9 @@ import './style.css'
 
 const app = createApp(App)
 
+console.log(import.meta.env);
+
 app.use(router)
 app.use(store)
-
 app.mount('#app')
 

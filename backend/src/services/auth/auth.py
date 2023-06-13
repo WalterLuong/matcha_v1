@@ -8,7 +8,6 @@ from services.database import db as db
 from constants import http_status_code as CODE
 from services.validators.validators import is_email, is_name, is_strong_password
 
-
 auth = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
 user_att = ['id', 'password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim']
 new_user_att = ['password', 'first_name', 'last_name', 'gender_id', 'details', 'email', 'confirmation_cod', 'confirmation_tim']
